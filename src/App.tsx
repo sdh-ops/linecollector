@@ -9,6 +9,7 @@ import { Capture } from './pages/Capture';
 import { LinkBook } from './pages/LinkBook';
 import { Search } from './pages/Search';
 import { AuthPage } from './pages/AuthPage';
+import { Admin } from './pages/Admin';
 import { Button } from './components/Button';
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
           <Route path="/capture" element={<Capture />} />
           <Route path="/search" element={<Search />} />
           <Route path="/link-book" element={<LinkBook />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
 
