@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: var(--space-4);
+}
+
+.instructionBox {
+    text-align: center;
+    color: var(--text-accent);
+    font-size: 0.875rem;
+    padding: var(--space-2);
+    background-color: rgba(212, 163, 115, 0.1);
+    border-radius: var(--radius-md);
+}
+
+.textBoard {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4);
+    user-select: text;
+    /* Crucial for selection */
+    -webkit-user-select: text;
+}
+
+.extractedText {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 2;
+    white-space: pre-wrap;
+    color: var(--text-primary);
+    /* Highlight styling when text is selected */
+}
+
+.extractedText::selection {
+    background-color: rgba(212, 163, 115, 0.4);
+    color: var(--text-primary);
+}
+
+.actionContainer {
+    position: sticky;
+    bottom: 0;
+    padding: var(--space-2) 0;
+    background-color: var(--bg-color);
+    box-shadow: 0 -10px 20px var(--bg-color);
+}
+
+.saveBtn {
+    gap: var(--space-2);
+}
