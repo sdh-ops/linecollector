@@ -12,6 +12,7 @@ export const Home = () => {
     const [loading, setLoading] = useState(true);
     const [selectedBookForDetail, setSelectedBookForDetail] = useState<SentenceData | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+    const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
     const categories = ['전체', ...Array.from(new Set(sentences.map(s => s.category || '기타')))];
 
@@ -22,6 +23,7 @@ export const Home = () => {
     const fetchSentences = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
+            setCurrentUserId(user?.id);
 
             const { data, error } = await supabase
                 .from('sentences')
@@ -150,6 +152,7 @@ export const Home = () => {
                             onDelete={handleDelete}
                             onLike={handleLikeUpdate}
                             onBookClick={(s) => setSelectedBookForDetail(s)}
+                            currentUserId={currentUserId}
                         />
                     ))}
                 </div>

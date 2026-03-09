@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MoreVertical, BookOpen, Share2, Trash2, Heart } from 'lucide-react';
+import { BookOpen, Share2, Trash2, Heart, EyeOff } from 'lucide-react';
+
 import styles from './SentenceCard.module.css';
 import { Button } from './Button';
 import { ShareCardExporter } from './ShareCardExporter';
@@ -24,10 +25,11 @@ export interface SentenceData {
 
 interface SentenceCardProps {
     sentence: SentenceData;
-    onMenuClick?: (id: string) => void;
     onDelete?: (id: string) => void;
+    onHide?: (id: string) => void;   // for Explore: hide own sentence from list
     onLike?: (id: string, isLiked: boolean) => void;
     onBookClick?: (sentence: SentenceData) => void;
+    currentUserId?: string;          // pass to detect ownership
 }
 
 const HIGHLIGHT_MAP: Record<string, string> = {
@@ -37,9 +39,13 @@ const HIGHLIGHT_MAP: Record<string, string> = {
     pink: 'rgba(251, 207, 232, 0.4)',
 };
 
-export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike, onBookClick }: SentenceCardProps) => {
+export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, currentUserId }: SentenceCardProps) => {
     const [showShare, setShowShare] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+
+    const isOwner = currentUserId && sentence.user_id === currentUserId;
+
     const date = new Date(sentence.created_at).toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: 'long',
@@ -82,13 +88,14 @@ export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike, onBookCl
     };
 
     return (
-        <article className={`glass-panel ${styles.card}`}>
+        <article className={`glass-panel ${styles.card}`} onClick={() => showMenu && setShowMenu(false)}>
             <div className={styles.header}>
                 <div className={styles.headerLeft}>
                     <span className={styles.date}>{date}</span>
                     {sentence.is_public && <span className={styles.publicBadge}>공개</span>}
                 </div>
-                <div style={{ display: 'flex', gap: '4px' }}>
+                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                    {/* Like */}
                     <div className={styles.likeInfo}>
                         <Button
                             variant="ghost"
@@ -102,31 +109,37 @@ export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike, onBookCl
                         </Button>
                         {sentence.likes_count > 0 && <span className={styles.likeCount}>{sentence.likes_count}</span>}
                     </div>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setShowShare(true)}
-                        aria-label="Share"
-                    >
+
+                    {/* Share */}
+                    <Button variant="ghost" size="icon" onClick={() => setShowShare(true)} aria-label="Share">
                         <Share2 size={16} />
                     </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onDelete?.(sentence.id)}
-                        aria-label="Delete"
-                        className={styles.deleteBtn}
-                    >
-                        <Trash2 size={16} />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onMenuClick?.(sentence.id)}
-                        aria-label="More options"
-                    >
-                        <MoreVertical size={16} />
-                    </Button>
+
+                    {/* Delete (only own sentences) */}
+                    {(onDelete && isOwner !== false) && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onDelete(sentence.id)}
+                            aria-label="Delete"
+                            className={styles.deleteBtn}
+                        >
+                            <Trash2 size={16} />
+                        </Button>
+                    )}
+
+                    {/* Hide from Explore (only own sentences in Explore) */}
+                    {onHide && isOwner && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onHide(sentence.id)}
+                            aria-label="Hide"
+                            className={styles.hideBtn}
+                        >
+                            <EyeOff size={16} />
+                        </Button>
+                    )}
                 </div>
             </div>
 

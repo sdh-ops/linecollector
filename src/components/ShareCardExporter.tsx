@@ -10,19 +10,35 @@ interface ShareCardExporterProps {
     onClose: () => void;
 }
 
+const BG_OPTIONS = [
+    { id: 'dark', label: '다크', bg: '#1a1918', text: '#e6e0d8' },
+    { id: 'cream', label: '크림', bg: '#f7f0e6', text: '#2d2b28' },
+    { id: 'slate', label: '슬레이트', bg: '#1e293b', text: '#e2e8f0' },
+    { id: 'rose', label: '로즈', bg: '#fff1f2', text: '#881337' },
+    { id: 'forest', label: '포레스트', bg: '#14532d', text: '#dcfce7' },
+    { id: 'lavender', label: '라벤더', bg: '#f5f3ff', text: '#4c1d95' },
+];
+
 export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isExporting, setIsExporting] = useState(false);
+    const [selectedBg, setSelectedBg] = useState(BG_OPTIONS[0]);
+    const [fontSize, setFontSize] = useState(18); // px
+
+    const captureCanvas = async () => {
+        if (!cardRef.current) return null;
+        return await html2canvas(cardRef.current, {
+            useCORS: true,
+            scale: 2,
+            backgroundColor: null,
+        });
+    };
 
     const handleDownload = async () => {
-        if (!cardRef.current) return;
         setIsExporting(true);
         try {
-            const canvas = await html2canvas(cardRef.current, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: null,
-            });
+            const canvas = await captureCanvas();
+            if (!canvas) return;
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.download = `sentence-${sentence.id.slice(0, 8)}.png`;
@@ -37,27 +53,16 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
     };
 
     const handleShare = async () => {
-        if (!cardRef.current) return;
         setIsExporting(true);
         try {
-            const canvas = await html2canvas(cardRef.current, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: null,
-            });
-
+            const canvas = await captureCanvas();
+            if (!canvas) return;
             canvas.toBlob(async (blob) => {
                 if (!blob) return;
                 const file = new File([blob], 'sentence.png', { type: 'image/png' });
-
                 if (navigator.share && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: '문장서랍',
-                        text: '마음에 드는 문장을 공유합니다.',
-                    });
+                    await navigator.share({ files: [file], title: '문장서랍', text: '마음에 드는 문장을 공유합니다.' });
                 } else {
-                    // Fallback to download
                     handleDownload();
                 }
             });
@@ -78,22 +83,56 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
                     </Button>
                 </div>
 
+                {/* Controls */}
+                <div className={styles.controls}>
+                    <div className={styles.controlRow}>
+                        <span className={styles.controlLabel}>배경</span>
+                        <div className={styles.bgOptions}>
+                            {BG_OPTIONS.map(opt => (
+                                <button
+                                    key={opt.id}
+                                    className={`${styles.bgSwatch} ${selectedBg.id === opt.id ? styles.bgSwatchActive : ''}`}
+                                    style={{ background: opt.bg, border: `2px solid ${selectedBg.id === opt.id ? opt.text : 'transparent'}` }}
+                                    onClick={() => setSelectedBg(opt)}
+                                    title={opt.label}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div className={styles.controlRow}>
+                        <span className={styles.controlLabel}>글자 크기 {fontSize}px</span>
+                        <input
+                            type="range"
+                            min={13}
+                            max={28}
+                            step={1}
+                            value={fontSize}
+                            onChange={e => setFontSize(Number(e.target.value))}
+                            className={styles.slider}
+                        />
+                    </div>
+                </div>
+
                 <div className={styles.previewArea}>
-                    <div ref={cardRef} className={styles.exportCard}>
-                        <div className={styles.decorator}></div>
+                    <div
+                        ref={cardRef}
+                        className={styles.exportCard}
+                        style={{ background: selectedBg.bg, color: selectedBg.text }}
+                    >
+                        <div className={styles.decorator} style={{ background: selectedBg.text, opacity: 0.15 }} />
                         <div className={styles.cardHeader}>
-                            <span className={styles.brand}>문장서랍</span>
+                            <span className={styles.brand} style={{ color: selectedBg.text, opacity: 0.5 }}>문장서랍</span>
                         </div>
                         <div className={styles.cardContent}>
-                            <p className={styles.sentenceText}>
+                            <p className={styles.sentenceText} style={{ fontSize: `${fontSize}px`, color: selectedBg.text }}>
                                 {sentence.content}
                             </p>
                         </div>
                         <div className={styles.cardFooter}>
                             {sentence.book_title && (
                                 <div className={styles.bookInfo}>
-                                    <span className={styles.bookTitle}>{sentence.book_title}</span>
-                                    <span className={styles.bookAuthor}>{sentence.book_author}</span>
+                                    <span className={styles.bookTitle} style={{ color: selectedBg.text }}>{sentence.book_title}</span>
+                                    <span className={styles.bookAuthor} style={{ color: selectedBg.text, opacity: 0.6 }}>{sentence.book_author}</span>
                                 </div>
                             )}
                         </div>

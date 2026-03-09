@@ -3,11 +3,13 @@ import { supabase } from '../lib/supabase';
 import { SentenceCard } from '../components/SentenceCard';
 import type { SentenceData } from '../components/SentenceCard';
 import { Compass, Loader2 } from 'lucide-react';
-import styles from './Home.module.css'; // Reusing Home styles for consistency
+import styles from './Home.module.css';
 
 export const Explore = () => {
     const [sentences, setSentences] = useState<SentenceData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+    const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         fetchPublicSentences();
@@ -16,8 +18,8 @@ export const Explore = () => {
     const fetchPublicSentences = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
+            setCurrentUserId(user?.id);
 
-            // Fetch public sentences
             const { data, error } = await supabase
                 .from('sentences')
                 .select('*, likes(user_id)')
@@ -51,6 +53,23 @@ export const Explore = () => {
         }));
     };
 
+    const handleDelete = async (id: string) => {
+        if (!confirm('이 문장을 삭제하시겠습니까?')) return;
+        try {
+            const { error } = await supabase.from('sentences').delete().eq('id', id);
+            if (error) throw error;
+            setSentences(prev => prev.filter(s => s.id !== id));
+        } catch (error: any) {
+            alert('삭제에 실패했습니다: ' + error.message);
+        }
+    };
+
+    const handleHide = (id: string) => {
+        setHiddenIds(prev => new Set([...prev, id]));
+    };
+
+    const visibleSentences = sentences.filter(s => !hiddenIds.has(s.id));
+
     if (loading) {
         return (
             <div className={styles.centerContainer}>
@@ -67,7 +86,7 @@ export const Explore = () => {
                 <p className={styles.subtitle}>다른 사람들에게 영감을 준 문장들을 만나보세요.</p>
             </header>
 
-            {sentences.length === 0 ? (
+            {visibleSentences.length === 0 ? (
                 <div className={styles.emptyState}>
                     <Compass size={48} className={styles.emptyIcon} />
                     <h3>공개된 문장이 아직 없습니다</h3>
@@ -75,11 +94,14 @@ export const Explore = () => {
                 </div>
             ) : (
                 <div className={styles.feed}>
-                    {sentences.map((sentence) => (
+                    {visibleSentences.map((sentence) => (
                         <SentenceCard
                             key={sentence.id}
                             sentence={sentence}
                             onLike={handleLikeUpdate}
+                            onDelete={sentence.user_id === currentUserId ? handleDelete : undefined}
+                            onHide={sentence.user_id === currentUserId ? handleHide : undefined}
+                            currentUserId={currentUserId}
                         />
                     ))}
                 </div>
