@@ -65,11 +65,7 @@ export const LinkBook = () => {
                 if (queryOverride && data.item.length === 1) {
                     const book = data.item[0];
                     setSelectedBook(book);
-                    // Auto-set category if found from book
-                    if (book.categoryName) {
-                        const cleanCategory = book.categoryName.split('>')[1] || book.categoryName.split('>')[0] || '기타';
-                        setCategory(cleanCategory.trim());
-                    }
+                    applyBookMeta(book);
                 }
             }
         } catch (error) {
@@ -101,12 +97,42 @@ export const LinkBook = () => {
             }
         } catch (error) {
             console.error('AI Analysis error:', error);
-            // Fallback: No automatic tags if AI fails
         } finally {
             setIsAnalyzing(false);
         }
     };
 
+    // Map book categoryName (from Aladin API) to our category and auto-generate tags
+    const applyBookMeta = (book: BookItem) => {
+        if (book.categoryName) {
+            const raw = book.categoryName;
+            // Aladin returns e.g. "국내도서>소설/시/희곡>한국소설"
+            const parts = raw.split('>');
+            const sub = (parts[1] || parts[0] || '').trim();
+
+            // Map to our fixed category list
+            const categoryMap: Record<string, string> = {
+                '소설': '소설', '시': '문학', '희곡': '문학', '시/희곡': '문학', '소설/시/희곡': '문학',
+                '에세이': '에세이', '인문학': '인문', '인문': '인문', '사회': '사회', '사회과학': '사회',
+                '과학': '과학', '자기계발': '자기계발', '경제/경영': '경제경영', '경제': '경제경영',
+                '경영': '경제경영', '예술': '예술', '역사': '인문', '철학': '인문', '심리학': '인문',
+            };
+            const mapped = Object.keys(categoryMap).find(k =>
+                sub.includes(k)
+            );
+            setCategory(mapped ? categoryMap[mapped] : '기타');
+
+            // Auto-generate tags from category breadcrumb
+            const autoTags = parts
+                .slice(1)
+                .map(p => p.trim())
+                .filter(p => p.length > 0 && p.length < 10)
+                .slice(0, 3);
+            if (autoTags.length > 0) {
+                setTags(prev => [...new Set([...prev, ...autoTags])]);
+            }
+        }
+    };
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && tagInput.trim()) {
@@ -303,10 +329,7 @@ export const LinkBook = () => {
                                         className={`glass-panel ${styles.bookCard}`}
                                         onClick={() => {
                                             setSelectedBook(book);
-                                            if (book.categoryName) {
-                                                const cleanCategory = book.categoryName.split('>')[1] || book.categoryName.split('>')[0] || '기타';
-                                                setCategory(cleanCategory.trim());
-                                            }
+                                            applyBookMeta(book);
                                         }}
                                     >
                                         {book.cover ? (

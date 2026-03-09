@@ -200,3 +200,99 @@ button {
 .light-theme .glass-panel {
   background-color: rgba(255, 255, 255, 0.6);
 }
+
+/* ============================================================
+   RESPONSIVE DESIGN — Mobile First
+   ============================================================ */
+
+/* ── Base: Mobile (< 480px) ── */
+:root {
+  --app-max-width: 600px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: var(--app-max-width);
+}
+
+/* ── Tablet (480px – 768px) ── */
+@media (min-width: 480px) {
+  .app-main {
+    padding: var(--space-6);
+  }
+
+  .app-header {
+    padding: var(--space-4) var(--space-8);
+  }
+
+  .sentence-text {
+    font-size: 1.15rem;
+  }
+}
+
+/* ── Desktop (769px+): Two-column-capable, centered card ── */
+@media (min-width: 769px) {
+  :root {
+    --app-max-width: 680px;
+  }
+
+  body {
+    /* Subtle gradient background on desktop so the card stands out */
+    background: radial-gradient(ellipse at top, #2a2724 0%, #1a1918 70%);
+  }
+
+  .light-theme body {
+    background: radial-gradient(ellipse at top, #f0ede6 0%, #e6e0d8 70%);
+  }
+
+  .app-container {
+    margin-top: 0;
+    min-height: 100vh;
+  }
+
+  .app-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .app-main {
+    padding: var(--space-8);
+    padding-bottom: 96px;
+  }
+
+  .bottom-nav {
+    height: 72px;
+    font-size: 0.8125rem;
+  }
+
+  .sentence-text {
+    font-size: 1.2rem;
+    line-height: 2;
+  }
+}
+
+/* ── Very small screens (< 360px) ── */
+@media (max-width: 359px) {
+  .app-header h1 {
+    font-size: 1rem;
+  }
+
+  .app-main {
+    padding: var(--space-3);
+  }
+
+  .sentence-text {
+    font-size: 1rem;
+  }
+}
+
+/* Safe area insets for notch/home-bar devices (iPhone X+, etc.) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .app-main {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}
