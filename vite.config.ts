@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: '문장콜렉터',
-        short_name: '문장콜렉터',
+        name: '문장서랍',
+        short_name: '문장서랍',
         description: '책 속 좋은 문장을 사진으로 쉽게 수집하고 관리하세요.',
         theme_color: '#1a1918',
         background_color: '#1a1918',

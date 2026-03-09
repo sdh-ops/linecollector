@@ -45,7 +45,7 @@ export const AuthPage = () => {
             <div className={styles.card}>
                 <div className={styles.logoArea}>
                     <BookOpen size={48} className={styles.logoIcon} />
-                    <h1 className={styles.title}>문장콜렉터</h1>
+                    <h1 className={styles.title}>문장서랍</h1>
                     <p className={styles.subtitle}>나만의 문장을 프라이빗하게 간직하세요</p>
                 </div>
 

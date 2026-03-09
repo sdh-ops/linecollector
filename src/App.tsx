@@ -74,7 +74,7 @@ function App() {
       )}
       {!hideBottomNav && (
         <header className="app-header">
-          <h1>문장콜렉터</h1>
+          <h1>문장서랍</h1>
           <div style={{ display: 'flex', gap: '8px' }}>
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
               <LogOut size={20} />
