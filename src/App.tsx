@@ -103,13 +103,13 @@ function App() {
             <HomeIcon size={24} />
             <span>보관함</span>
           </Link>
-          <Link to="/discover" className={location.pathname === '/discover' ? 'active' : ''}>
-            <Compass size={24} />
-            <span>둘러보기</span>
-          </Link>
           <Link to="/capture" className={location.pathname === '/capture' ? 'active' : ''}>
             <Camera size={24} />
             <span>스캔</span>
+          </Link>
+          <Link to="/discover" className={location.pathname === '/discover' ? 'active' : ''}>
+            <Compass size={24} />
+            <span>둘러보기</span>
           </Link>
           <Link to="/search" className={location.pathname === '/search' ? 'active' : ''}>
             <SearchIcon size={24} />
