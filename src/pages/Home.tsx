@@ -3,12 +3,17 @@ import { supabase } from '../lib/supabase';
 import { SentenceCard } from '../components/SentenceCard';
 import type { SentenceData } from '../components/SentenceCard';
 import { BookOpen } from 'lucide-react';
+import { BookDetailModal } from '../components/BookDetailModal';
 import styles from './Home.module.css';
 
 export const Home = () => {
     const [sentences, setSentences] = useState<SentenceData[]>([]);
     const [dailySentence, setDailySentence] = useState<SentenceData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [selectedBookForDetail, setSelectedBookForDetail] = useState<SentenceData | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+
+    const categories = ['전체', ...Array.from(new Set(sentences.map(s => s.category || '기타')))];
 
     useEffect(() => {
         fetchSentences();
@@ -83,6 +88,10 @@ export const Home = () => {
         }
     };
 
+    const filteredSentences = selectedCategory === '전체'
+        ? sentences
+        : sentences.filter(s => (s.category || '기타') === selectedCategory);
+
     if (loading) {
         return (
             <div className={styles.centerContainer}>
@@ -105,30 +114,54 @@ export const Home = () => {
                         <span className={styles.dailyBadge}>오늘의 문장</span>
                         <p className={styles.dailyContent}>"{dailySentence.content}"</p>
                         <div className={styles.dailyMeta}>
-                            {dailySentence.book_title && <span>— {dailySentence.book_title}</span>}
+                            {dailySentence.book_title && <span onClick={() => setSelectedBookForDetail(dailySentence)} style={{ cursor: 'pointer' }}>— {dailySentence.book_title}</span>}
                         </div>
                     </div>
                 </section>
             )}
 
-            {sentences.length === 0 ? (
+            <section className={styles.filterSection}>
+                <div className={styles.categoryList}>
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            className={`${styles.categoryTab} ${selectedCategory === cat ? styles.activeTab : ''}`}
+                            onClick={() => setSelectedCategory(cat)}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </section>
+
+            {filteredSentences.length === 0 ? (
                 <div className={styles.emptyState}>
                     <BookOpen size={48} className={styles.emptyIcon} />
-                    <h3>저장된 문장이 없습니다</h3>
-                    <p>아래 스캔 버튼을 눌러 첫 문장을 수집해보세요.</p>
+                    <h3>{selectedCategory === '전체' ? '저장된 문장이 없습니다' : '해당 카테고리의 문장이 없습니다'}</h3>
+                    <p>{selectedCategory === '전체' ? '아래 스캔 버튼을 눌러 첫 문장을 수집해보세요.' : '다른 카테고리를 선택해보세요.'}</p>
                 </div>
             ) : (
                 <div className={styles.feed}>
-                    {sentences.map((sentence) => (
+                    {filteredSentences.map((sentence) => (
                         <SentenceCard
                             key={sentence.id}
                             sentence={sentence}
                             onDelete={handleDelete}
                             onLike={handleLikeUpdate}
-                            onMenuClick={(id) => console.log('menu clicked', id)}
+                            onBookClick={(s) => setSelectedBookForDetail(s)}
                         />
                     ))}
                 </div>
+            )}
+
+            {selectedBookForDetail && (
+                <BookDetailModal
+                    isbn={selectedBookForDetail.isbn}
+                    title={selectedBookForDetail.book_title}
+                    author={selectedBookForDetail.book_author}
+                    coverUrl={selectedBookForDetail.book_cover_url}
+                    onClose={() => setSelectedBookForDetail(null)}
+                />
             )}
         </div>
     );

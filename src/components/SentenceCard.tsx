@@ -11,12 +11,14 @@ export interface SentenceData {
     book_title: string | null;
     book_author: string | null;
     book_cover_url: string | null;
+    isbn: string | null;
     created_at: string;
     tags: string[];
     highlight_color: string | null;
     is_public: boolean;
     likes_count: number;
     user_id: string;
+    category: string;
     is_liked?: boolean;
 }
 
@@ -25,6 +27,7 @@ interface SentenceCardProps {
     onMenuClick?: (id: string) => void;
     onDelete?: (id: string) => void;
     onLike?: (id: string, isLiked: boolean) => void;
+    onBookClick?: (sentence: SentenceData) => void;
 }
 
 const HIGHLIGHT_MAP: Record<string, string> = {
@@ -34,7 +37,7 @@ const HIGHLIGHT_MAP: Record<string, string> = {
     pink: 'rgba(251, 207, 232, 0.4)',
 };
 
-export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike }: SentenceCardProps) => {
+export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike, onBookClick }: SentenceCardProps) => {
     const [showShare, setShowShare] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
     const date = new Date(sentence.created_at).toLocaleDateString('ko-KR', {
@@ -148,22 +151,22 @@ export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike }: Senten
                 </div>
             )}
 
-            {(sentence.book_title || sentence.book_author) && (
-                <div className={styles.bookInfo}>
+            {sentence.book_title && (
+                <div
+                    className={styles.bookInfo}
+                    onClick={() => onBookClick?.(sentence)}
+                    style={{ cursor: 'pointer' }}
+                >
                     {sentence.book_cover_url ? (
-                        <img
-                            src={sentence.book_cover_url}
-                            alt={sentence.book_title || 'Book cover'}
-                            className={styles.cover}
-                        />
+                        <img src={sentence.book_cover_url} alt="" className={styles.cover} />
                     ) : (
                         <div className={`${styles.cover} ${styles.coverPlaceholder}`}>
                             <BookOpen size={20} />
                         </div>
                     )}
                     <div className={styles.bookMeta}>
-                        <span className={styles.bookTitle}>{sentence.book_title || '제목 없음'}</span>
-                        <span className={styles.bookAuthor}>{sentence.book_author || '저자 미상'}</span>
+                        <span className={styles.bookTitle}>{sentence.book_title}</span>
+                        <span className={styles.bookAuthor}>{sentence.book_author}</span>
                     </div>
                 </div>
             )}

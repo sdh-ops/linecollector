@@ -10,7 +10,9 @@ interface BookItem {
     author: string;
     cover: string;
     isbn13: string;
+    categoryName?: string;
 }
+
 
 const HIGHLIGHT_COLORS = [
     { id: 'none', label: '기본', value: 'transparent' },
@@ -37,6 +39,9 @@ export const LinkBook = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState('');
     const [isPublic, setIsPublic] = useState(false);
+    const [category, setCategory] = useState('기타');
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
 
     useEffect(() => {
         if (isbnQuery) {
@@ -58,8 +63,13 @@ export const LinkBook = () => {
             if (data.item && data.item.length > 0) {
                 setSearchResults(data.item);
                 if (queryOverride && data.item.length === 1) {
-                    // Auto-select if it's a direct ISBN match and only 1 result
-                    setSelectedBook(data.item[0]);
+                    const book = data.item[0];
+                    setSelectedBook(book);
+                    // Auto-set category if found from book
+                    if (book.categoryName) {
+                        const cleanCategory = book.categoryName.split('>')[1] || book.categoryName.split('>')[0] || '기타';
+                        setCategory(cleanCategory.trim());
+                    }
                 }
             }
         } catch (error) {
@@ -69,6 +79,34 @@ export const LinkBook = () => {
             setIsSearching(false);
         }
     };
+
+    const analyzeSentence = async () => {
+        if (!textContent.trim() || isAnalyzing) return;
+
+        setIsAnalyzing(true);
+        try {
+            const response = await fetch(`https://oryxiptdxmuubszuhvvf.supabase.co/functions/v1/analyze-sentence`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: textContent })
+            });
+            const data = await response.json();
+
+            if (data.tags && data.tags.length > 0) {
+                // Merge tags, avoid duplicates
+                setTags(prev => [...new Set([...prev, ...data.tags])]);
+            }
+            if (data.category && category === '기타') {
+                setCategory(data.category);
+            }
+        } catch (error) {
+            console.error('AI Analysis error:', error);
+            // Fallback: No automatic tags if AI fails
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && tagInput.trim()) {
@@ -106,8 +144,10 @@ export const LinkBook = () => {
                     highlight_color: highlightColor,
                     tags: tags,
                     is_public: isPublic,
+                    category: category,
                 }
             ]);
+
 
             if (error) throw error;
 
@@ -141,6 +181,7 @@ export const LinkBook = () => {
                             className={`glass-panel ${styles.textArea}`}
                             value={textContent}
                             onChange={(e) => setTextContent(e.target.value)}
+                            onBlur={analyzeSentence}
                             rows={5}
                             placeholder="수집할 문장을 입력하거나 수정하세요."
                             style={{
@@ -148,7 +189,37 @@ export const LinkBook = () => {
                                 transition: 'background-color 0.3s ease'
                             }}
                         />
+                        <button
+                            className={styles.aiBtn}
+                            onClick={analyzeSentence}
+                            disabled={isAnalyzing}
+                            type="button"
+                        >
+                            {isAnalyzing ? <Loader2 size={14} className="animate-spin" /> : <Tag size={14} />}
+                            AI 분석 (태그/카테고리 자동 생성)
+                        </button>
                     </div>
+
+                    <div className={styles.categoryBlock}>
+                        <span className={styles.subLabel}>카테고리:</span>
+                        <select
+                            className={styles.categorySelect}
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <option value="기타">기타</option>
+                            <option value="인문">인문</option>
+                            <option value="사회">사회</option>
+                            <option value="과학">과학</option>
+                            <option value="문학">문학</option>
+                            <option value="소설">소설</option>
+                            <option value="에세이">에세이</option>
+                            <option value="자기계발">자기계발</option>
+                            <option value="경제경영">경제경영</option>
+                            <option value="예술">예술</option>
+                        </select>
+                    </div>
+
 
                     <div className={styles.colorPickerBlock}>
                         <span className={styles.subLabel}>하이라이트 색상:</span>
@@ -230,7 +301,13 @@ export const LinkBook = () => {
                                     <div
                                         key={book.isbn13}
                                         className={`glass-panel ${styles.bookCard}`}
-                                        onClick={() => setSelectedBook(book)}
+                                        onClick={() => {
+                                            setSelectedBook(book);
+                                            if (book.categoryName) {
+                                                const cleanCategory = book.categoryName.split('>')[1] || book.categoryName.split('>')[0] || '기타';
+                                                setCategory(cleanCategory.trim());
+                                            }
+                                        }}
                                     >
                                         {book.cover ? (
                                             <img src={book.cover} alt="" className={styles.bookCover} />
