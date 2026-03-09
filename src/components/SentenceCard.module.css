@@ -18,10 +18,51 @@
     align-items: center;
 }
 
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.publicBadge {
+    font-size: 0.625rem;
+    color: var(--text-accent);
+    background-color: rgba(212, 163, 115, 0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
 .date {
     font-size: 0.75rem;
     color: var(--text-secondary);
     letter-spacing: 0.5px;
+}
+
+.likeInfo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.likeBtn {
+    color: var(--text-secondary);
+    transition: color 0.2s, transform 0.2s;
+}
+
+.likeBtn:hover {
+    color: #f43f5e !important;
+    transform: scale(1.1);
+}
+
+.liked {
+    color: #f43f5e !important;
+}
+
+.likeCount {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    min-width: 12px;
 }
 
 .deleteBtn:hover {

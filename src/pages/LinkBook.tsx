@@ -36,6 +36,7 @@ export const LinkBook = () => {
     const [highlightColor, setHighlightColor] = useState('none');
     const [tags, setTags] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState('');
+    const [isPublic, setIsPublic] = useState(false);
 
     useEffect(() => {
         if (isbnQuery) {
@@ -104,6 +105,7 @@ export const LinkBook = () => {
                     user_id: user?.id,
                     highlight_color: highlightColor,
                     tags: tags,
+                    is_public: isPublic,
                 }
             ]);
 
@@ -251,6 +253,20 @@ export const LinkBook = () => {
             </div>
 
             <div className={styles.actionArea}>
+                <div className={styles.publicToggleSection}>
+                    <div className={styles.publicInfo}>
+                        <span className={styles.publicTitle}>함께 읽기 (공개)</span>
+                        <span className={styles.publicDesc}>이 문장을 다른 사람들과 함께 읽고 싶으면 활성화하세요.</span>
+                    </div>
+                    <label className={styles.switch}>
+                        <input
+                            type="checkbox"
+                            checked={isPublic}
+                            onChange={(e) => setIsPublic(e.target.checked)}
+                        />
+                        <span className={styles.slider}></span>
+                    </label>
+                </div>
                 <Button
                     fullWidth
                     size="lg"

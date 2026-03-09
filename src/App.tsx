@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff } from 'lucide-react';
+import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff, Compass } from 'lucide-react';
 import { useAppStore } from './store';
 import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
+import { Explore } from './pages/Explore';
 import { Capture } from './pages/Capture';
 import { LinkBook } from './pages/LinkBook';
 import { Search } from './pages/Search';
@@ -89,6 +90,7 @@ function App() {
       <main className="app-main" style={{ paddingBottom: hideBottomNav ? 0 : '80px' }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/discover" element={<Explore />} />
           <Route path="/capture" element={<Capture />} />
           <Route path="/search" element={<Search />} />
           <Route path="/link-book" element={<LinkBook />} />
@@ -100,6 +102,10 @@ function App() {
           <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
             <HomeIcon size={24} />
             <span>보관함</span>
+          </Link>
+          <Link to="/discover" className={location.pathname === '/discover' ? 'active' : ''}>
+            <Compass size={24} />
+            <span>둘러보기</span>
           </Link>
           <Link to="/capture" className={location.pathname === '/capture' ? 'active' : ''}>
             <Camera size={24} />

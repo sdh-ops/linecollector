@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { MoreVertical, BookOpen, Share2, Trash2 } from 'lucide-react';
+import { MoreVertical, BookOpen, Share2, Trash2, Heart } from 'lucide-react';
 import styles from './SentenceCard.module.css';
 import { Button } from './Button';
 import { ShareCardExporter } from './ShareCardExporter';
+import { supabase } from '../lib/supabase';
 
 export interface SentenceData {
     id: string;
@@ -13,12 +14,17 @@ export interface SentenceData {
     created_at: string;
     tags: string[];
     highlight_color: string | null;
+    is_public: boolean;
+    likes_count: number;
+    user_id: string;
+    is_liked?: boolean;
 }
 
 interface SentenceCardProps {
     sentence: SentenceData;
     onMenuClick?: (id: string) => void;
     onDelete?: (id: string) => void;
+    onLike?: (id: string, isLiked: boolean) => void;
 }
 
 const HIGHLIGHT_MAP: Record<string, string> = {
@@ -28,8 +34,9 @@ const HIGHLIGHT_MAP: Record<string, string> = {
     pink: 'rgba(251, 207, 232, 0.4)',
 };
 
-export const SentenceCard = ({ sentence, onMenuClick, onDelete }: SentenceCardProps) => {
+export const SentenceCard = ({ sentence, onMenuClick, onDelete, onLike }: SentenceCardProps) => {
     const [showShare, setShowShare] = useState(false);
+    const [isLiking, setIsLiking] = useState(false);
     const date = new Date(sentence.created_at).toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: 'long',
@@ -40,11 +47,58 @@ export const SentenceCard = ({ sentence, onMenuClick, onDelete }: SentenceCardPr
         ? { backgroundColor: HIGHLIGHT_MAP[sentence.highlight_color] }
         : {};
 
+    const handleLikeClick = async () => {
+        if (isLiking) return;
+        setIsLiking(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            if (sentence.is_liked) {
+                // Unlike
+                const { error } = await supabase
+                    .from('likes')
+                    .delete()
+                    .eq('user_id', user.id)
+                    .eq('sentence_id', sentence.id);
+                if (error) throw error;
+                onLike?.(sentence.id, false);
+            } else {
+                // Like
+                const { error } = await supabase
+                    .from('likes')
+                    .insert([{ user_id: user.id, sentence_id: sentence.id }]);
+                if (error) throw error;
+                onLike?.(sentence.id, true);
+            }
+        } catch (error) {
+            console.error('Like error:', error);
+        } finally {
+            setIsLiking(false);
+        }
+    };
+
     return (
         <article className={`glass-panel ${styles.card}`}>
             <div className={styles.header}>
-                <span className={styles.date}>{date}</span>
+                <div className={styles.headerLeft}>
+                    <span className={styles.date}>{date}</span>
+                    {sentence.is_public && <span className={styles.publicBadge}>공개</span>}
+                </div>
                 <div style={{ display: 'flex', gap: '4px' }}>
+                    <div className={styles.likeInfo}>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleLikeClick}
+                            disabled={isLiking}
+                            className={`${styles.likeBtn} ${sentence.is_liked ? styles.liked : ''}`}
+                            aria-label="Like"
+                        >
+                            <Heart size={16} fill={sentence.is_liked ? "currentColor" : "none"} />
+                        </Button>
+                        {sentence.likes_count > 0 && <span className={styles.likeCount}>{sentence.likes_count}</span>}
+                    </div>
                     <Button
                         variant="ghost"
                         size="icon"

@@ -16,19 +16,25 @@ export const Home = () => {
 
     const fetchSentences = async () => {
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+
             const { data, error } = await supabase
                 .from('sentences')
-                .select('*')
+                .select('*, likes(user_id)')
+                .eq('user_id', user?.id)
                 .order('created_at', { ascending: false });
 
             if (error) {
                 console.error('Error fetching sentences:', error);
             } else {
-                const fetchedSentences = data as SentenceData[];
+                const fetchedSentences = (data as any[]).map(item => ({
+                    ...item,
+                    is_liked: item.likes?.some((l: any) => l.user_id === user?.id)
+                })) as SentenceData[];
+
                 setSentences(fetchedSentences);
 
                 if (fetchedSentences.length > 0) {
-                    // Select daily sentence based on date to keep it consistent for the day
                     const today = new Date().toDateString();
                     let seed = 0;
                     for (let i = 0; i < today.length; i++) {
@@ -41,6 +47,19 @@ export const Home = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleLikeUpdate = (id: string, isLiked: boolean) => {
+        setSentences(prev => prev.map(s => {
+            if (s.id === id) {
+                return {
+                    ...s,
+                    is_liked: isLiked,
+                    likes_count: isLiked ? s.likes_count + 1 : Math.max(0, s.likes_count - 1)
+                };
+            }
+            return s;
+        }));
     };
 
     const handleDelete = async (id: string) => {
@@ -105,6 +124,7 @@ export const Home = () => {
                             key={sentence.id}
                             sentence={sentence}
                             onDelete={handleDelete}
+                            onLike={handleLikeUpdate}
                             onMenuClick={(id) => console.log('menu clicked', id)}
                         />
                     ))}
