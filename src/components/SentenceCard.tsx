@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreVertical, BookOpen, Share2 } from 'lucide-react';
+import { MoreVertical, BookOpen, Share2, Trash2 } from 'lucide-react';
 import styles from './SentenceCard.module.css';
 import { Button } from './Button';
 import { ShareCardExporter } from './ShareCardExporter';
@@ -18,6 +18,7 @@ export interface SentenceData {
 interface SentenceCardProps {
     sentence: SentenceData;
     onMenuClick?: (id: string) => void;
+    onDelete?: (id: string) => void;
 }
 
 const HIGHLIGHT_MAP: Record<string, string> = {
@@ -27,7 +28,7 @@ const HIGHLIGHT_MAP: Record<string, string> = {
     pink: 'rgba(251, 207, 232, 0.4)',
 };
 
-export const SentenceCard = ({ sentence, onMenuClick }: SentenceCardProps) => {
+export const SentenceCard = ({ sentence, onMenuClick, onDelete }: SentenceCardProps) => {
     const [showShare, setShowShare] = useState(false);
     const date = new Date(sentence.created_at).toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -51,6 +52,15 @@ export const SentenceCard = ({ sentence, onMenuClick }: SentenceCardProps) => {
                         aria-label="Share"
                     >
                         <Share2 size={16} />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onDelete?.(sentence.id)}
+                        aria-label="Delete"
+                        className={styles.deleteBtn}
+                    >
+                        <Trash2 size={16} />
                     </Button>
                     <Button
                         variant="ghost"

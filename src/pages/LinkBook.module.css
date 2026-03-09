@@ -53,6 +53,14 @@
     font-weight: 500;
 }
 
+.editTip {
+    font-size: 0.75rem;
+    color: var(--text-accent);
+    background-color: rgba(212, 163, 115, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
 .textAreaContainer {
     position: relative;
 }

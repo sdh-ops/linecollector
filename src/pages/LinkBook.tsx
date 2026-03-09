@@ -130,7 +130,10 @@ export const LinkBook = () => {
 
             <div className={styles.contentArea}>
                 <section className={styles.section}>
-                    <h3 className={styles.sectionTitle}>문장 내용</h3>
+                    <div className={styles.sectionHeader}>
+                        <h3 className={styles.sectionTitle}>문장 내용</h3>
+                        <span className={styles.editTip}>추출된 문장에 오타가 있다면 직접 수정해 보세요.</span>
+                    </div>
                     <div className={styles.textAreaContainer}>
                         <textarea
                             className={`glass-panel ${styles.textArea}`}

@@ -24,6 +24,10 @@
     letter-spacing: 0.5px;
 }
 
+.deleteBtn:hover {
+    color: #ef4444 !important;
+}
+
 .contentWrapper {
     padding: var(--space-3);
     border-radius: var(--radius-sm);

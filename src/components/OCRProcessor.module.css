@@ -70,6 +70,29 @@
     margin-top: var(--space-4);
 }
 
+.ocrTips {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+    font-size: 0.8125rem;
+    color: var(--text-accent);
+    background-color: rgba(212, 163, 115, 0.1);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

@@ -43,6 +43,27 @@ export const Home = () => {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        if (!confirm('이 문장을 삭제하시겠습니까?')) return;
+
+        try {
+            const { error } = await supabase
+                .from('sentences')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setSentences(prev => prev.filter(s => s.id !== id));
+            if (dailySentence?.id === id) {
+                setDailySentence(null);
+            }
+        } catch (error: any) {
+            console.error('Delete error:', error);
+            alert('삭제에 실패했습니다: ' + error.message);
+        }
+    };
+
     if (loading) {
         return (
             <div className={styles.centerContainer}>
@@ -83,6 +104,7 @@ export const Home = () => {
                         <SentenceCard
                             key={sentence.id}
                             sentence={sentence}
+                            onDelete={handleDelete}
                             onMenuClick={(id) => console.log('menu clicked', id)}
                         />
                     ))}

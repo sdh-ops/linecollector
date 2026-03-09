@@ -73,6 +73,9 @@ export const OCRProcessor = ({ imageSrc, onExtracted, onCancel }: OCRProcessorPr
                                 style={{ width: `${Math.max(5, progress.progress * 100)}%` }}
                             />
                         </div>
+                        <div className={styles.ocrTips}>
+                            <p>💡 팁: 조명이 밝고 글자가 수평일 때 더 잘 읽혀요.</p>
+                        </div>
                         <Button onClick={onCancel} variant="ghost" className={styles.cancelBtn}>
                             취소하기
                         </Button>
