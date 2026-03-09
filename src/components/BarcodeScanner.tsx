@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { X, Zap, ZapOff } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from './Button';
 import styles from './BarcodeScanner.module.css';
 
@@ -11,7 +11,6 @@ interface BarcodeScannerProps {
 
 export const BarcodeScanner = ({ onScan, onClose }: BarcodeScannerProps) => {
     const scannerRef = useRef<Html5Qrcode | null>(null);
-    const regionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const scanner = new Html5Qrcode('qr-reader', {
