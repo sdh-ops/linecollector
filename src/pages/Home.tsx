@@ -4,7 +4,6 @@ import { SentenceCard } from '../components/SentenceCard';
 import type { SentenceData } from '../components/SentenceCard';
 import { BookOpen } from 'lucide-react';
 import { BookDetailModal } from '../components/BookDetailModal';
-import { AdBanner } from '../components/AdBanner';
 import styles from './Home.module.css';
 
 export const Home = () => {
@@ -135,7 +134,6 @@ export const Home = () => {
                 </div>
             </section>
 
-            <AdBanner />
 
             {filteredSentences.length === 0 ? (
                 <div className={styles.emptyState}>
