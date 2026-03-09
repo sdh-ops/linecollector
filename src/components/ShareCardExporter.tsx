@@ -53,7 +53,7 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
                 if (navigator.share && navigator.canShare({ files: [file] })) {
                     await navigator.share({
                         files: [file],
-                        title: '문장콜렉터',
+                        title: '문장서랍',
                         text: '마음에 드는 문장을 공유합니다.',
                     });
                 } else {
@@ -82,7 +82,7 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
                     <div ref={cardRef} className={styles.exportCard}>
                         <div className={styles.decorator}></div>
                         <div className={styles.cardHeader}>
-                            <span className={styles.brand}>문장콜렉터</span>
+                            <span className={styles.brand}>문장서랍</span>
                         </div>
                         <div className={styles.cardContent}>
                             <p className={styles.sentenceText}>
