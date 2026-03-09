@@ -21,9 +21,15 @@ export const OCRProcessor = ({ imageSrc, onExtracted, onCancel }: OCRProcessorPr
                 if (isMounted) setProgress({ status: '이미지 분석 및 업로드 중...', progress: 0.3 });
 
                 // Call Supabase Edge Function 'extract-text'
-                const response = await fetch(`https://oryxiptdxmuubszuhvvf.supabase.co/functions/v1/extract-text`, {
+                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://oryxiptdxmuubszuhvvf.supabase.co';
+                const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+                const response = await fetch(`${supabaseUrl}/functions/v1/extract-text`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${anonKey}`
+                    },
                     body: JSON.stringify({ imageBase64: imageSrc })
                 });
 
