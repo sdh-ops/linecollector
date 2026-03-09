@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Tesseract from 'tesseract.js';
 import { Loader2 } from 'lucide-react';
 import { Button } from './Button';
 import styles from './OCRProcessor.module.css';
@@ -15,31 +14,38 @@ export const OCRProcessor = ({ imageSrc, onExtracted, onCancel }: OCRProcessorPr
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let worker: Tesseract.Worker | null = null;
         let isMounted = true;
 
         const extractText = async () => {
             try {
-                worker = await Tesseract.createWorker('kor', 1, {
-                    logger: (m) => {
-                        if (isMounted) {
-                            setProgress({ status: m.status, progress: m.progress });
-                        }
-                    }
+                if (isMounted) setProgress({ status: '이미지 분석 및 업로드 중...', progress: 0.3 });
+
+                // Call Supabase Edge Function 'extract-text'
+                const response = await fetch(`https://oryxiptdxmuubszuhvvf.supabase.co/functions/v1/extract-text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imageBase64: imageSrc })
                 });
 
-                const { data: { text } } = await worker.recognize(imageSrc);
+                if (isMounted) setProgress({ status: 'AI가 문맥을 파악하며 텍스트를 완벽하게 교정 중입니다...', progress: 0.7 });
+
+                if (!response.ok) {
+                    throw new Error('AI 스캐너 서버와 연결할 수 없습니다.');
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
 
                 if (isMounted) {
-                    onExtracted(text);
+                    setProgress({ status: '추출 완료!', progress: 1.0 });
+                    onExtracted(data.text);
                 }
             } catch (err: any) {
                 if (isMounted) {
                     setError(err.message || '텍스트 추출 중 오류가 발생했습니다.');
-                }
-            } finally {
-                if (worker) {
-                    await worker.terminate();
                 }
             }
         };
@@ -48,9 +54,6 @@ export const OCRProcessor = ({ imageSrc, onExtracted, onCancel }: OCRProcessorPr
 
         return () => {
             isMounted = false;
-            if (worker) {
-                worker.terminate();
-            }
         };
     }, [imageSrc, onExtracted]);
 
@@ -65,16 +68,16 @@ export const OCRProcessor = ({ imageSrc, onExtracted, onCancel }: OCRProcessorPr
                 ) : (
                     <>
                         <Loader2 className={styles.spinner} size={48} />
-                        <h3 className={styles.title}>문장을 읽고 있습니다...</h3>
+                        <h3 className={styles.title}>AI 스캐너 작동 중...</h3>
                         <p className={styles.status}>{progress.status}</p>
                         <div className={styles.progressBar}>
                             <div
                                 className={styles.progressFill}
-                                style={{ width: `${Math.max(5, progress.progress * 100)}%` }}
+                                style={{ width: `${Math.max(5, progress.progress * 100)}%`, transition: 'width 0.5s ease-in-out' }}
                             />
                         </div>
                         <div className={styles.ocrTips}>
-                            <p>💡 팁: 조명이 밝고 글자가 수평일 때 더 잘 읽혀요.</p>
+                            <p>✨ Gemini AI가 책의 문맥을 이해하여 오타를 교정합니다.</p>
                         </div>
                         <Button onClick={onCancel} variant="ghost" className={styles.cancelBtn}>
                             취소하기
