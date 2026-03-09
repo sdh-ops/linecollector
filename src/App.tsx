@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff, Compass } from 'lucide-react';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff, Compass, ShieldCheck } from 'lucide-react';
 import { useAppStore } from './store';
 import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
@@ -13,9 +13,10 @@ import { Admin } from './pages/Admin';
 import { Button } from './components/Button';
 
 function App() {
-  const { theme, toggleTheme, user, setUser, isAuthLoading, setIsAuthLoading } = useAppStore();
+  const { theme, toggleTheme, user, setUser, isAdmin, setIsAdmin, isAuthLoading, setIsAuthLoading } = useAppStore();
   const [isOffline, setIsOffline] = useState(!window.navigator.onLine);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -42,6 +43,23 @@ function App() {
 
     return () => subscription.unsubscribe();
   }, [setUser, setIsAuthLoading]);
+
+  useEffect(() => {
+    if (user) {
+      const checkAdmin = async () => {
+        const { data, error } = await supabase
+          .from('admins')
+          .select('email')
+          .eq('email', user.email)
+          .single();
+
+        setIsAdmin(!!data && !error);
+      };
+      checkAdmin();
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user, setIsAdmin]);
 
   // Hide bottom nav on specific screens
   const hideBottomNav = location.pathname === '/link-book';
@@ -78,11 +96,21 @@ function App() {
         <header className="app-header">
           <h1>문장서랍</h1>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
-              <LogOut size={20} />
-            </Button>
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </Button>
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/admin')}
+                aria-label="Admin Dashboard"
+              >
+                <ShieldCheck size={20} className="text-accent" />
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
+              <LogOut size={20} />
             </Button>
           </div>
         </header>

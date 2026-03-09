@@ -6,6 +6,8 @@ interface AppState {
     toggleTheme: () => void;
     user: User | null;
     setUser: (user: User | null) => void;
+    isAdmin: boolean;
+    setIsAdmin: (isAdmin: boolean) => void;
     isAuthLoading: boolean;
     setIsAuthLoading: (loading: boolean) => void;
 }
@@ -15,6 +17,8 @@ export const useAppStore = create<AppState>((set) => ({
     toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
     user: null,
     setUser: (user) => set({ user }),
+    isAdmin: false,
+    setIsAdmin: (isAdmin) => set({ isAdmin }),
     isAuthLoading: true,
     setIsAuthLoading: (loading) => set({ isAuthLoading: loading }),
 }));
