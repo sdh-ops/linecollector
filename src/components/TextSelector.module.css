@@ -2,135 +2,136 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap: var(--space-6);
-    padding-bottom: 160px;
+    gap: var(--space-4);
+    padding-bottom: 140px;
 }
 
 .instructionBox {
     text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: var(--space-6);
+    padding: var(--space-4);
     background-color: var(--surface-1);
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--border-subtle);
     margin-bottom: var(--space-2);
 }
 
 .instructionBox p {
     color: var(--text-accent);
-    font-weight: 800;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .textBoard {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-8);
+    padding: var(--space-6);
     user-select: text;
     -webkit-user-select: text;
     background-color: var(--surface-1);
-    border: 1.5px solid var(--border-strong);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
 }
 
 .extractedText {
     font-family: var(--font-serif);
-    font-size: 1.3rem;
-    line-height: 2.1;
+    font-size: 1.15rem;
+    line-height: 1.9;
     white-space: pre-wrap;
     color: var(--text-primary);
     word-break: keep-all;
 }
 
 .extractedText::selection {
-    background-color: rgba(93, 134, 108, 0.25);
-    color: var(--text-primary);
-}
-
-/* Floating Action Toolbar (Quick Save) */
-.floatingToolbar {
-    position: fixed;
-    z-index: 2000;
-    background-color: var(--text-accent);
-    color: white;
-    padding: 6px;
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    box-shadow: var(--shadow-lg);
-    animation: toolbarAppear 0.3s var(--ease-in-out);
-    pointer-events: auto;
-}
-
-.toolbarBtn {
-    background: none;
-    border: none;
-    color: white;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
-    transition: transform 0.1s ease;
-}
-
-.toolbarBtn:active {
-    transform: scale(0.9);
-}
-
-@keyframes toolbarAppear {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -10px) scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0) scale(1);
-    }
+    background-color: rgba(93, 134, 108, 0.2);
 }
 
 .actionContainer {
     position: fixed;
-    bottom: 110px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 40px);
     max-width: 500px;
-    z-index: 900;
-    background: linear-gradient(to top, var(--bg-color) 80%, transparent);
-    padding: 20px 0;
+    z-index: 1000;
+    height: var(--btn-height);
 }
 
 .buttonGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    position: relative;
     width: 100%;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.selectionModeLayer,
+.normalModeLayer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: all 0.3s var(--ease-in-out);
+}
+
+/* Layer Management */
+.selectionModeLayer {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    pointer-events: none;
+}
+
+.normalModeLayer {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.selectionActive .selectionModeLayer {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.selectionActive .normalModeLayer {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    pointer-events: none;
+}
+
+.dualButtons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.saveBtn {
+    height: var(--btn-height) !important;
+    background-color: var(--text-accent) !important;
+    color: white !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-md) !important;
 }
 
 .completeBtn {
-    height: 64px !important;
-    font-size: 1.15rem !important;
-    font-weight: 800 !important;
-    background-color: var(--text-accent) !important;
+    height: var(--btn-height) !important;
+    background-color: var(--text-primary) !important;
     color: white !important;
-    box-shadow: var(--shadow-md) !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
     border-radius: var(--radius-md) !important;
-    border: none !important;
 }
 
 .retryBtn {
-    height: 58px !important;
-    font-size: 1rem !important;
-    font-weight: 700 !important;
-    background-color: var(--surface-2) !important;
-    border: 1.5px solid var(--border-strong) !important;
-    color: var(--text-primary) !important;
+    height: var(--btn-height) !important;
+    background-color: var(--surface-1) !important;
+    border: 1px solid var(--border-strong) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
     border-radius: var(--radius-md) !important;
 }

@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap: var(--space-6);
-    padding: var(--space-2) 0;
+    gap: var(--space-8);
+    padding: var(--space-4) 0;
 }
 
 .header {
@@ -12,8 +12,8 @@
 
 .title {
     font-size: 2rem;
-    font-weight: 900;
-    font-family: var(--font-serif);
+    font-weight: 800;
+    font-family: var(--font-sans);
     color: var(--text-primary);
     margin-bottom: var(--space-2);
     letter-spacing: -0.04em;
@@ -21,26 +21,29 @@
 
 .subtitle {
     color: var(--text-secondary);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .searchBar {
     display: flex;
     align-items: center;
     background-color: var(--surface-1);
-    border: 1.5px solid var(--border-strong);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
-    padding: var(--space-5) var(--space-6);
+    height: var(--input-height);
+    padding: 0 var(--space-6);
     gap: var(--space-4);
     position: relative;
-    transition: all 0.2s var(--ease-in-out);
+    transition: all 0.25s var(--ease-in-out);
     box-shadow: var(--shadow-sm);
 }
 
 .searchBar:focus-within {
     border-color: var(--text-accent);
-    box-shadow: 0 0 0 4px rgba(93, 134, 108, 0.1);
+    box-shadow: 0 0 0 4px rgba(93, 134, 108, 0.08);
+    transform: translateY(-1px);
 }
 
 .searchIcon {
@@ -52,7 +55,7 @@
     border: none;
     background: transparent;
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     outline: none;
 }
@@ -60,6 +63,7 @@
 .searchInput::placeholder {
     color: var(--text-tertiary);
     font-weight: 500;
+    letter-spacing: -0.02em;
 }
 
 .resultsArea {
@@ -69,7 +73,7 @@
 .feed {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-4);
 }
 
 .emptyState {
@@ -80,13 +84,13 @@
     padding: var(--space-12) var(--space-4);
     text-align: center;
     color: var(--text-tertiary);
-    height: 40vh;
+    height: 50vh;
 }
 
 .emptyIcon {
     margin-bottom: var(--space-6);
     color: var(--text-accent);
-    opacity: 0.3;
+    opacity: 0.2;
 }
 
 .spinner {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Check, Camera } from 'lucide-react';
 import { Button } from './Button';
 import styles from './TextSelector.module.css';
@@ -11,31 +11,18 @@ interface TextSelectorProps {
 
 export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
     const [selectedText, setSelectedText] = useState('');
-    const [toolbarPos, setToolbarPos] = useState({ top: 0, left: 0, visible: false });
-    const textBoardRef = useRef<HTMLDivElement>(null);
+    const [isSelectionMode, setIsSelectionMode] = useState(false);
 
     useEffect(() => {
         const handleSelectionChange = () => {
             const selection = window.getSelection();
+            const text = selection?.toString().trim() || '';
 
-            if (selection && selection.toString().trim().length > 0 && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const rects = range.getClientRects();
-                if (rects.length === 0) return;
-
-                // Use the last rect to position below the final line of selection
-                const lastRect = rects[rects.length - 1];
-
-                setSelectedText(selection.toString().trim());
-
-                // Position 40px below the selection to clear system menus
-                setToolbarPos({
-                    top: lastRect.bottom + 40,
-                    left: lastRect.left + lastRect.width / 2,
-                    visible: true
-                });
+            if (text.length > 0) {
+                setSelectedText(text);
+                setIsSelectionMode(true);
             } else {
-                setToolbarPos(prev => ({ ...prev, visible: false }));
+                setIsSelectionMode(false);
             }
         };
 
@@ -47,13 +34,10 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
 
     const handleSave = () => {
         if (!selectedText) return;
-
         onSave(selectedText);
-
-        // Haptic-like visual feedback: clear selection and hide toolbar
         window.getSelection()?.removeAllRanges();
         setSelectedText('');
-        setToolbarPos(prev => ({ ...prev, visible: false }));
+        setIsSelectionMode(false);
     };
 
     return (
@@ -62,36 +46,37 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
                 <p>간직하고 싶은 문장을 드래그해보세요. ✨</p>
             </div>
 
-            <div className={styles.textBoard} ref={textBoardRef}>
+            <div className={styles.textBoard}>
                 <p className={styles.extractedText}>{text}</p>
             </div>
 
-            {toolbarPos.visible && selectedText && (
-                <div
-                    className={styles.floatingToolbar}
-                    style={{
-                        top: `${toolbarPos.top}px`,
-                        left: `${toolbarPos.left}px`,
-                        transform: 'translateX(-50%)'
-                    }}
-                >
-                    <button className={styles.toolbarBtn} onClick={handleSave}>
-                        <Save size={18} />
-                        간직하기
-                    </button>
-                </div>
-            )}
-
             <div className={styles.actionContainer}>
-                <div className={styles.buttonGroup}>
-                    <Button fullWidth onClick={onRetry} className={styles.completeBtn}>
-                        <Check size={20} />
-                        수집 완료 (보관함으로)
-                    </Button>
-                    <Button fullWidth variant="ghost" onClick={onRetry} className={styles.retryBtn}>
-                        <Camera size={20} />
-                        다시 찍기
-                    </Button>
+                <div className={`${styles.buttonGroup} ${isSelectionMode ? styles.selectionActive : ''}`}>
+                    {/* Mode 1: Selection Mode (Save) */}
+                    <div className={styles.selectionModeLayer}>
+                        <Button
+                            fullWidth
+                            onClick={handleSave}
+                            className={styles.saveBtn}
+                        >
+                            <Save size={18} />
+                            이 문장 간직하기
+                        </Button>
+                    </div>
+
+                    {/* Mode 2: Normal Mode (Complete / Retry) */}
+                    <div className={styles.normalModeLayer}>
+                        <div className={styles.dualButtons}>
+                            <Button fullWidth onClick={onRetry} className={styles.completeBtn}>
+                                <Check size={18} />
+                                수집 완료
+                            </Button>
+                            <Button fullWidth variant="ghost" onClick={onRetry} className={styles.retryBtn}>
+                                <Camera size={18} />
+                                다시 찍기
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

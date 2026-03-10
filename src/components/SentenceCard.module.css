@@ -1,131 +1,111 @@
 .card {
     background-color: var(--surface-1);
     border-radius: var(--radius-md);
-    padding: var(--space-8);
+    padding: var(--space-6);
     position: relative;
-    border: 1.5px solid var(--border-strong);
+    border: 1px solid var(--border-strong);
     box-shadow: var(--shadow-sm);
-    transition: all 0.3s var(--ease-in-out);
+    transition: all 0.25s var(--ease-in-out);
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-4);
     animation: scaleIn 0.3s var(--ease-in-out);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-4);
 }
 
 .card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    border-color: var(--text-accent);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .headerLeft {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: 8px;
 }
 
 .publicBadge {
-    padding: 4px 12px;
-    background-color: var(--text-accent);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 900;
-    border-radius: 8px;
+    padding: 3px 10px;
+    background-color: rgba(93, 134, 108, 0.1);
+    color: var(--text-accent);
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
 }
 
 .date {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-weight: 700;
-}
-
-.contentWrapper {
-    margin: var(--space-1) 0;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
 }
 
 .content {
     font-family: var(--font-serif);
-    font-size: 1.35rem;
-    line-height: 1.8;
+    font-size: 1.25rem;
+    line-height: 1.75;
     color: var(--text-primary);
     word-break: keep-all;
+    letter-spacing: -0.01em;
 }
 
 .bookInfo {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
-    padding-top: var(--space-6);
-    border-top: 1.5px solid var(--border-subtle);
-}
-
-.cover {
-    width: 50px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    gap: 12px;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-subtle);
 }
 
 .bookMeta {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .bookTitle {
-    font-size: 1rem;
-    font-weight: 900;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: var(--text-primary);
+    letter-spacing: -0.02em;
 }
 
 .bookAuthor {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .tagsArea {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
-    margin-top: var(--space-2);
 }
 
 .tag {
-    font-size: 0.8rem;
-    color: var(--text-accent);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
     background-color: var(--surface-2);
-    padding: 6px 14px;
+    padding: 3px 10px;
     border-radius: var(--radius-full);
-    font-weight: 800;
-    border: 1px solid var(--border-subtle);
+    font-weight: 600;
 }
 
 .actions {
-    position: absolute;
-    top: var(--space-6);
-    right: var(--space-6);
     display: flex;
-    gap: var(--space-2);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.card:hover .actions {
-    opacity: 1;
+    gap: 4px;
 }
 
 .actionBtn {
-    padding: 10px;
+    padding: 8px;
     border-radius: var(--radius-full);
     color: var(--text-tertiary);
     transition: all 0.2s ease;
@@ -138,8 +118,4 @@
 
 .favorited {
     color: var(--text-accent) !important;
-}
-
-.deleteBtn:hover {
-    color: #ef4444 !important;
 }
