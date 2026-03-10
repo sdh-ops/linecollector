@@ -1,22 +1,22 @@
 .card {
     background-color: var(--surface-1);
-    border-radius: var(--radius-md);
-    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
     position: relative;
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-sm);
-    transition: all 0.25s var(--ease-in-out);
+    transition: all 0.4s var(--ease-soft);
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    animation: scaleIn 0.3s var(--ease-in-out);
-    margin-bottom: var(--space-4);
+    gap: var(--space-6);
+    animation: scaleIn 0.4s var(--ease-soft);
+    margin-bottom: var(--space-6);
 }
 
 .card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.01);
     box-shadow: var(--shadow-md);
-    border-color: var(--text-accent);
+    border-color: rgba(93, 134, 108, 0.2);
 }
 
 .header {
@@ -28,94 +28,102 @@
 .headerLeft {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .publicBadge {
-    padding: 3px 10px;
-    background-color: rgba(93, 134, 108, 0.1);
+    padding: 4px 12px;
+    background-color: rgba(93, 134, 108, 0.08);
     color: var(--text-accent);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 800;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.02em;
 }
 
 .date {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-tertiary);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .content {
     font-family: var(--font-serif);
-    font-size: 1.25rem;
-    line-height: 1.75;
+    font-size: 1.35rem;
+    line-height: 1.85;
     color: var(--text-primary);
     word-break: keep-all;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
 }
 
 .bookInfo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--border-subtle);
+    gap: 14px;
+    padding-top: var(--space-6);
+    border-top: 1px dashed var(--border-strong);
 }
 
 .bookMeta {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .bookTitle {
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
     color: var(--text-primary);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
 }
 
 .bookAuthor {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .tagsArea {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .tag {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--text-secondary);
     background-color: var(--surface-2);
-    padding: 3px 10px;
+    padding: 4px 14px;
     border-radius: var(--radius-full);
-    font-weight: 600;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    background-color: var(--text-accent);
+    color: white;
 }
 
 .actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
 }
 
 .actionBtn {
-    padding: 8px;
+    padding: 10px;
     border-radius: var(--radius-full);
     color: var(--text-tertiary);
-    transition: all 0.2s ease;
+    transition: all 0.3s var(--ease-soft);
+    background-color: var(--surface-2);
 }
 
 .actionBtn:hover {
-    background-color: var(--surface-2);
-    color: var(--text-accent);
+    background-color: var(--text-accent);
+    color: white;
+    transform: scale(1.1);
 }
 
 .favorited {
-    color: var(--text-accent) !important;
+    color: #E74C3C !important;
+    background-color: rgba(231, 76, 60, 0.1) !important;
 }

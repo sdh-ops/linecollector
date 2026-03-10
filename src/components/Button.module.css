@@ -2,16 +2,17 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: -0.01em;
-    transition: all 0.2s var(--ease-in-out);
+    font-size: 0.98rem;
+    letter-spacing: -0.02em;
+    transition: all 0.3s var(--ease-soft);
     cursor: pointer;
     border: none;
-    gap: 8px;
+    gap: 10px;
     height: var(--btn-height);
-    padding: 0 var(--space-6);
+    padding: 0 var(--space-8);
+    user-select: none;
 }
 
 .button:disabled {
@@ -21,32 +22,36 @@
 }
 
 .button:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: scale(0.94);
 }
 
-/* Variants */
+/* Variants - Soft Surfaces */
 .variant-primary {
     background-color: var(--text-accent);
     color: #fff;
-    box-shadow: 0 4px 12px rgba(93, 134, 108, 0.2);
+    box-shadow: var(--shadow-pill);
 }
 
 .variant-primary:hover:not(:disabled) {
     background-color: var(--text-accent-hover);
-    box-shadow: 0 6px 16px rgba(93, 134, 108, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(93, 134, 108, 0.25);
 }
 
 .variant-secondary {
     background-color: var(--text-primary);
     color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .variant-secondary:hover:not(:disabled) {
-    opacity: 0.9;
+    transform: translateY(-2px);
+    opacity: 0.95;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .variant-ghost {
-    background-color: transparent;
+    background-color: var(--surface-1);
     color: var(--text-secondary);
     border: 1px solid var(--border-strong);
 }
@@ -54,25 +59,28 @@
 .variant-ghost:hover:not(:disabled) {
     background-color: var(--surface-2);
     color: var(--text-primary);
+    transform: translateY(-1px);
 }
 
 .variant-icon {
     background-color: transparent;
     height: auto;
     width: auto;
-    padding: var(--space-2);
+    padding: var(--space-3);
     border-radius: var(--radius-full);
+    color: var(--text-tertiary);
 }
 
 .variant-icon:hover:not(:disabled) {
     background-color: var(--surface-2);
+    color: var(--text-accent);
 }
 
-/* Sizes (Overridden by btn-height for primary use, but keeping sm for utility) */
+/* Sizes */
 .size-sm {
-    height: 36px;
-    padding: 0 var(--space-4);
-    font-size: 0.825rem;
+    height: 40px;
+    padding: 0 var(--space-6);
+    font-size: 0.85rem;
 }
 
 .size-md {
@@ -81,8 +89,8 @@
 
 .size-lg {
     height: 60px;
-    font-size: 1.1rem;
-    padding: 0 var(--space-8);
+    font-size: 1.05rem;
+    padding: 0 var(--space-10);
 }
 
 .fullWidth {

@@ -7,47 +7,47 @@
 }
 
 .header {
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 800;
     font-family: var(--font-sans);
     color: var(--text-primary);
     margin-bottom: var(--space-2);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.05em;
 }
 
 .subtitle {
     color: var(--text-secondary);
-    font-size: 1.05rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
 .searchBar {
     display: flex;
     align-items: center;
     background-color: var(--surface-1);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     height: var(--input-height);
-    padding: 0 var(--space-6);
+    padding: 0 var(--space-8);
     gap: var(--space-4);
     position: relative;
-    transition: all 0.25s var(--ease-in-out);
+    transition: all 0.4s var(--ease-soft);
     box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
 }
 
 .searchBar:focus-within {
-    border-color: var(--text-accent);
-    box-shadow: 0 0 0 4px rgba(93, 134, 108, 0.08);
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 12px 24px rgba(93, 134, 108, 0.12);
+    border-color: rgba(93, 134, 108, 0.3);
 }
 
 .searchIcon {
-    color: var(--text-tertiary);
+    color: var(--text-accent);
 }
 
 .searchInput {
@@ -55,15 +55,15 @@
     border: none;
     background: transparent;
     color: var(--text-primary);
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     outline: none;
+    letter-spacing: -0.01em;
 }
 
 .searchInput::placeholder {
     color: var(--text-tertiary);
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    font-weight: 600;
 }
 
 .resultsArea {
@@ -73,7 +73,7 @@
 .feed {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-2);
 }
 
 .emptyState {
@@ -84,13 +84,13 @@
     padding: var(--space-12) var(--space-4);
     text-align: center;
     color: var(--text-tertiary);
-    height: 50vh;
+    height: 40vh;
 }
 
 .emptyIcon {
     margin-bottom: var(--space-6);
     color: var(--text-accent);
-    opacity: 0.2;
+    opacity: 0.15;
 }
 
 .spinner {
