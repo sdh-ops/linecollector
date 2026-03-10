@@ -3,24 +3,24 @@
     flex-direction: column;
     height: 100%;
     gap: var(--space-6);
-    padding-bottom: 120px;
+    padding-bottom: 160px;
 }
 
 .instructionBox {
     text-align: center;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: var(--space-4);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: var(--space-6);
     background-color: var(--surface-1);
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border-strong);
     margin-bottom: var(--space-2);
 }
 
 .instructionBox p {
     color: var(--text-accent);
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .textBoard {
@@ -30,22 +30,22 @@
     user-select: text;
     -webkit-user-select: text;
     background-color: var(--surface-1);
-    border: 1px solid var(--border-subtle);
+    border: 1.5px solid var(--border-strong);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm), var(--shadow-inner);
+    box-shadow: var(--shadow-sm);
 }
 
 .extractedText {
     font-family: var(--font-serif);
-    font-size: 1.25rem;
-    line-height: 2;
+    font-size: 1.3rem;
+    line-height: 2.1;
     white-space: pre-wrap;
     color: var(--text-primary);
     word-break: keep-all;
 }
 
 .extractedText::selection {
-    background-color: rgba(141, 163, 115, 0.3);
+    background-color: rgba(93, 134, 108, 0.25);
     color: var(--text-primary);
 }
 
@@ -60,7 +60,7 @@
     display: flex;
     align-items: center;
     box-shadow: var(--shadow-lg);
-    animation: toolbarAppear 0.25s var(--ease-in-out);
+    animation: toolbarAppear 0.3s var(--ease-in-out);
     pointer-events: auto;
 }
 
@@ -68,25 +68,25 @@
     background: none;
     border: none;
     color: white;
-    padding: 10px 20px;
-    font-size: 0.9rem;
+    padding: 12px 24px;
+    font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     white-space: nowrap;
     transition: transform 0.1s ease;
 }
 
 .toolbarBtn:active {
-    transform: scale(0.92);
+    transform: scale(0.9);
 }
 
 @keyframes toolbarAppear {
     from {
         opacity: 0;
-        transform: translate(-50%, 10px) scale(0.9);
+        transform: translate(-50%, -10px) scale(0.9);
     }
 
     to {
@@ -97,20 +97,40 @@
 
 .actionContainer {
     position: fixed;
-    bottom: 100px;
+    bottom: 110px;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 48px);
-    max-width: 550px;
+    width: calc(100% - 40px);
+    max-width: 500px;
     z-index: 900;
+    background: linear-gradient(to top, var(--bg-color) 80%, transparent);
+    padding: 20px 0;
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.completeBtn {
+    height: 64px !important;
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    background-color: var(--text-accent) !important;
+    color: white !important;
+    box-shadow: var(--shadow-md) !important;
+    border-radius: var(--radius-md) !important;
+    border: none !important;
 }
 
 .retryBtn {
-    background-color: var(--surface-2);
-    border: 1px solid var(--border-strong);
-    color: var(--text-secondary);
-    padding: 14px;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    width: 100%;
+    height: 58px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    background-color: var(--surface-2) !important;
+    border: 1.5px solid var(--border-strong) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
 }

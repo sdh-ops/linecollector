@@ -20,14 +20,18 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
 
             if (selection && selection.toString().trim().length > 0 && selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
+                const rects = range.getClientRects();
+                if (rects.length === 0) return;
+
+                // Use the last rect to position below the final line of selection
+                const lastRect = rects[rects.length - 1];
 
                 setSelectedText(selection.toString().trim());
 
-                // Calculate position: Center horizontally, and slightly above the top of the selection
+                // Position 40px below the selection to clear system menus
                 setToolbarPos({
-                    top: rect.top - 60, // Position 60px above the top of the selection rect
-                    left: rect.left + rect.width / 2,
+                    top: lastRect.bottom + 40,
+                    left: lastRect.left + lastRect.width / 2,
                     visible: true
                 });
             } else {
@@ -79,13 +83,13 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
             )}
 
             <div className={styles.actionContainer}>
-                <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-                    <Button fullWidth onClick={onRetry} className="btn-premium">
-                        <Check size={18} />
-                        수집 완료
+                <div className={styles.buttonGroup}>
+                    <Button fullWidth onClick={onRetry} className={styles.completeBtn}>
+                        <Check size={20} />
+                        수집 완료 (보관함으로)
                     </Button>
-                    <Button fullWidth variant="ghost" onClick={onRetry}>
-                        <Camera size={18} />
+                    <Button fullWidth variant="ghost" onClick={onRetry} className={styles.retryBtn}>
+                        <Camera size={20} />
                         다시 찍기
                     </Button>
                 </div>

@@ -2,29 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Premium Design Tokens */
-  --bg-color: #1a1c18;
-  /* Deep Charcoal Sage */
-  --surface-1: #242720;
-  /* Base Layer */
-  --surface-2: #2d3128;
-  /* Elevated Layer */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.15);
+  /* Commercial Premium Palette */
+  --bg-color: #F5F5F0;
+  --surface-1: #FFFFFF;
+  --surface-2: #E6D8C3;
+  --border-subtle: rgba(194, 166, 140, 0.2);
+  --border-strong: #C2A68C;
 
   /* Typography */
-  --text-primary: #f0f2ed;
-  --text-secondary: #9ea396;
-  --text-tertiary: #6b7064;
-  --text-accent: #8da373;
-  /* Refined Sage */
-  --text-accent-hover: #a1b885;
+  --text-primary: #1C1F1A;
+  --text-secondary: #5D6358;
+  --text-tertiary: #8A9184;
+  --text-accent: #5D866C;
+  --text-accent-hover: #4A6B56;
 
-  /* Elevations (Apple-style) */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.4);
-  --shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  /* Elevations */
+  --shadow-sm: 0 2px 8px rgba(194, 166, 140, 0.1);
+  --shadow-md: 0 12px 30px rgba(194, 166, 140, 0.15);
+  --shadow-lg: 0 20px 50px rgba(194, 166, 140, 0.2);
+  --shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.8);
 
   /* Border Radii */
   --radius-sm: 12px;
@@ -40,30 +36,11 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  /* Transitions & Curves */
+  /* Transitions */
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: 0.15s var(--ease-in-out);
   --transition-base: 0.3s var(--ease-in-out);
   --transition-slow: 0.5s var(--ease-in-out);
-}
-
-.light-theme {
-  --bg-color: #fcfcf9;
-  /* Airy Off-white */
-  --surface-1: #ffffff;
-  --surface-2: #f5f5f0;
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  --border-strong: rgba(0, 0, 0, 0.1);
-  --text-primary: #1c1f1a;
-  --text-secondary: #6b7061;
-  --text-tertiary: #a0a698;
-  --text-accent: #6b7e5f;
-  --text-accent-hover: #58694e;
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
-  --shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 @keyframes fadeIn {
@@ -150,7 +127,7 @@ body {
   padding: var(--space-6) var(--space-8);
   position: sticky;
   top: 0;
-  background-color: rgba(26, 28, 24, 0.7);
+  background-color: rgba(245, 245, 240, 0.8);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   z-index: 1000;
@@ -160,28 +137,10 @@ body {
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.light-theme .app-header {
-  background-color: rgba(252, 252, 249, 0.75);
-}
-
-.app-header h1 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text-accent);
-  transition: opacity 0.2s;
-}
-
-.app-header h1:hover {
-  opacity: 0.8;
-}
-
 .app-main {
   flex: 1;
   padding: var(--space-4);
-  padding-bottom: 80px;
-  /* Space for bottom nav */
+  padding-bottom: 100px;
 }
 
 /* Bottom Navigation - Floating Premium Capsule */
@@ -190,26 +149,21 @@ body {
   bottom: var(--space-6);
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 48px);
-  max-width: 550px;
-  height: 68px;
-  background-color: rgba(36, 39, 32, 0.8);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  width: calc(100% - 40px);
+  max-width: 500px;
+  height: 72px;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   display: flex;
   justify-content: space-around;
   align-items: center;
   z-index: 1000;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   padding: 0 var(--space-4);
   transition: transform 0.3s var(--ease-in-out);
-}
-
-.light-theme .bottom-nav {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-color: var(--border-subtle);
 }
 
 .offline-banner {

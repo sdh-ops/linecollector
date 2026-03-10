@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap: var(--space-4);
+    gap: var(--space-6);
     padding: var(--space-2) 0;
 }
 
@@ -11,34 +11,40 @@
 }
 
 .title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: var(--space-1);
+    font-size: 2rem;
+    font-weight: 900;
+    font-family: var(--font-serif);
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.04em;
 }
 
 .subtitle {
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .searchBar {
     display: flex;
     align-items: center;
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-full);
-    padding: var(--space-3) var(--space-4);
-    gap: var(--space-3);
+    background-color: var(--surface-1);
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    gap: var(--space-4);
     position: relative;
-    transition: border-color 0.2s;
+    transition: all 0.2s var(--ease-in-out);
+    box-shadow: var(--shadow-sm);
 }
 
 .searchBar:focus-within {
     border-color: var(--text-accent);
+    box-shadow: 0 0 0 4px rgba(93, 134, 108, 0.1);
 }
 
 .searchIcon {
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
 }
 
 .searchInput {
@@ -46,29 +52,24 @@
     border: none;
     background: transparent;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
     outline: none;
 }
 
 .searchInput::placeholder {
-    color: var(--text-secondary);
-}
-
-.spinner {
-    color: var(--text-accent);
+    color: var(--text-tertiary);
+    font-weight: 500;
 }
 
 .resultsArea {
     flex: 1;
-    display: flex;
-    flex-direction: column;
 }
 
 .feed {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding-bottom: var(--space-6);
 }
 
 .emptyState {
@@ -78,12 +79,16 @@
     justify-content: center;
     padding: var(--space-12) var(--space-4);
     text-align: center;
-    color: var(--text-secondary);
-    margin-top: var(--space-6);
+    color: var(--text-tertiary);
     height: 40vh;
 }
 
 .emptyIcon {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-6);
+    color: var(--text-accent);
     opacity: 0.3;
+}
+
+.spinner {
+    color: var(--text-accent);
 }
