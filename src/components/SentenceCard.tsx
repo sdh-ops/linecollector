@@ -51,9 +51,9 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onFavorite, o
 
     const date = new Date(sentence.created_at).toLocaleDateString('ko-KR', {
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+        month: '2-digit',
+        day: '2-digit',
+    }).replace(/\. /g, '.').replace(/\.$/, '');
 
     const highlightStyle = sentence.highlight_color && HIGHLIGHT_MAP[sentence.highlight_color]
         ? { backgroundColor: HIGHLIGHT_MAP[sentence.highlight_color] }
