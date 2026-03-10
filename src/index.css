@@ -2,29 +2,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap');
 
 :root {
-  /* Very dark, warm, calm background for dark mode (default) */
-  --bg-color: #1a1918;
-  --surface-color: #242220;
-  --surface-color-hover: #2d2b28;
-  --border-color: #383531;
+  /* Sage & Sand Palette - Emotional & Universal */
+  --bg-color: #1a1c17;
+  /* Deep Charcoal Green */
+  --surface-color: #24271e;
+  --surface-color-hover: #2d3126;
+  --border-color: #383c2f;
 
   /* Typography */
-  --text-primary: #e6e0d8;
-  /* Warm off-white */
-  --text-secondary: #a39e95;
-  /* Warm grey */
-  --text-accent: #d4a373;
-  /* Subtle brown/gold accent */
+  --text-primary: #e6e9e0;
+  /* Off-white with hint of green */
+  --text-secondary: #a3a89a;
+  --text-accent: #8da373;
+  /* Sage Green */
+  --text-accent-secondary: #d4a373;
+  /* Original Gold/Sand */
 
   /* Fonts */
-  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  --font-sans: 'Pretendard Variable', Pretendard, sans-serif;
   --font-serif: 'Nanum Myeongjo', serif;
-  /* For book sentences to give a classic feel */
 
   /* UI elements */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
   --radius-full: 9999px;
 
   /* Spacing */
@@ -34,17 +35,58 @@
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
-  --space-12: 48px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .light-theme {
-  --bg-color: #f7f5f0;
+  --bg-color: #f8f8f5;
+  /* Very light Sand */
   --surface-color: #ffffff;
-  --surface-color-hover: #f0ede6;
-  --border-color: #e6e0d8;
-  --text-primary: #2d2b28;
-  --text-secondary: #6e6b66;
-  --text-accent: #8b5a2b;
+  --surface-color-hover: #f0f0eb;
+  --border-color: #e5e5dd;
+  --text-primary: #2d302a;
+  --text-secondary: #6b7064;
+  --text-accent: #6b7e5f;
+  /* Deep Sage */
+  --text-accent-secondary: #ab886d;
+  /* Muted Sand/Earth */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 * {
@@ -84,20 +126,21 @@ button {
   flex-direction: column;
   position: relative;
   background-color: var(--bg-color);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  animation: fadeIn var(--transition-base);
 }
 
 .light-theme.app-container {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.03);
 }
 
 .app-header {
   padding: var(--space-4) var(--space-6);
   position: sticky;
   top: 0;
-  background-color: rgba(26, 25, 24, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(26, 28, 23, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 10;
   display: flex;
   justify-content: space-between;
@@ -106,7 +149,7 @@ button {
 }
 
 .light-theme .app-header {
-  background-color: rgba(247, 245, 240, 0.8);
+  background-color: rgba(248, 248, 245, 0.85);
 }
 
 .app-header h1 {

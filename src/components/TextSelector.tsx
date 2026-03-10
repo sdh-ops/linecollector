@@ -11,25 +11,15 @@ interface TextSelectorProps {
 
 export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
     const [selectedText, setSelectedText] = useState('');
-    const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleSelectionChange = () => {
             const selection = window.getSelection();
             if (selection && selection.toString().trim().length > 0 && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-
-                // Set popup position above the selection
-                setPopupPos({
-                    top: rect.top,
-                    left: rect.left + rect.width / 2
-                });
                 setSelectedText(selection.toString().trim());
             } else {
                 setSelectedText('');
-                setPopupPos(null);
             }
         };
 
@@ -38,6 +28,13 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
             document.removeEventListener('selectionchange', handleSelectionChange);
         };
     }, []);
+
+    const handleSave = () => {
+        onSave(selectedText);
+        // Clear selection after save to allow next one
+        window.getSelection()?.removeAllRanges();
+        setSelectedText('');
+    };
 
     return (
         <div className={styles.container} ref={containerRef}>
@@ -49,14 +46,14 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
                 <p className={styles.extractedText}>{text}</p>
             </div>
 
-            {popupPos && selectedText && (
-                <div
-                    className={styles.floatingToolbar}
-                    style={{ top: `${popupPos.top}px`, left: `${popupPos.left}px` }}
-                    onMouseDown={(e) => e.preventDefault()} // Prevent losing selection
-                >
-                    <button className={styles.popupSaveBtn} onClick={() => onSave(selectedText)}>
-                        <Save size={16} />
+            {selectedText && (
+                <div className={styles.selectionBar}>
+                    <div className={styles.selectionInfo}>
+                        <span className={styles.selectionLabel}>선택된 문장</span>
+                        <p className={styles.selectionPreview}>{selectedText}</p>
+                    </div>
+                    <button className={styles.saveButton} onClick={handleSave}>
+                        <Save size={18} />
                         저장하기
                     </button>
                 </div>
@@ -64,15 +61,15 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
 
             <div className={styles.actionContainer}>
                 {!selectedText && (
-                    <Button fullWidth variant="secondary" onClick={onRetry}>
-                        <RefreshCw size={20} />
-                        다시 사진 선택하기
-                    </Button>
-                )}
-                {selectedText && (
-                    <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)', padding: '8px' }}>
-                        문장 위 '저장하기' 버튼을 눌러주세요.
-                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+                        <Button fullWidth onClick={onRetry}>
+                            <RefreshCw size={18} />
+                            수집 완료하기 (홈으로)
+                        </Button>
+                        <Button fullWidth variant="ghost" onClick={onRetry}>
+                            다른 사진 찍기
+                        </Button>
+                    </div>
                 )}
             </div>
         </div>

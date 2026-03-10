@@ -5,11 +5,12 @@
     gap: var(--space-3);
     margin-bottom: var(--space-4);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeIn var(--transition-base);
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
 .header {

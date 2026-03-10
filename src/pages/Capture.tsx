@@ -66,6 +66,8 @@ export const Capture = () => {
         setAppState('SELECTING');
     };
 
+    const [toast, setToast] = useState<string | null>(null);
+
     const handleSaveText = async (text: string) => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
@@ -82,11 +84,16 @@ export const Capture = () => {
 
             if (error) throw error;
 
-            // Show success and move to home
-            navigate('/', { state: { message: '문장 저장됨 ✓' } });
+            // Show success toast and STAY on the screen for multi-scrap
+            setToast('문장 저장됨 ✓');
+            setTimeout(() => setToast(null), 2000);
         } catch (error: any) {
             alert('저장 실패: ' + error.message);
         }
+    };
+
+    const handleComplete = () => {
+        navigate('/');
     };
 
     if (appState === 'SELECTING') {
@@ -97,8 +104,13 @@ export const Capture = () => {
                     <p className={styles.subtitle}>간직할 문장만 드래그해주세요.</p>
                 </header>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <TextSelector text={extractedText} onSave={handleSaveText} onRetry={clearImage} />
+                    <TextSelector text={extractedText} onSave={handleSaveText} onRetry={handleComplete} />
                 </div>
+                {toast && (
+                    <div className={styles.toast}>
+                        {toast}
+                    </div>
+                )}
             </div>
         );
     }
