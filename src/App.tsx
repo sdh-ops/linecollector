@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff, Compass, ShieldCheck } from 'lucide-react';
+import { Home as HomeIcon, Camera, Search as SearchIcon, Moon, Sun, LogOut, WifiOff, Compass, ShieldCheck, User } from 'lucide-react';
 import { useAppStore } from './store';
 import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
@@ -10,6 +10,7 @@ import { LinkBook } from './pages/LinkBook';
 import { Search } from './pages/Search';
 import { AuthPage } from './pages/AuthPage';
 import { Admin } from './pages/Admin';
+import { Settings } from './pages/Settings';
 import { Button } from './components/Button';
 
 function App() {
@@ -94,10 +95,10 @@ function App() {
       )}
       {!hideBottomNav && (
         <header className="app-header">
-          <h1>문장서랍</h1>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <h1 onClick={() => navigate('/')} style={{ cursor: 'pointer', fontFamily: 'var(--font-serif)', fontSize: '1.25rem' }}>문장집</h1>
+          <div style={{ display: 'flex', gap: '4px' }}>
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </Button>
             {isAdmin && (
               <Button
@@ -106,11 +107,19 @@ function App() {
                 onClick={() => navigate('/admin')}
                 aria-label="Admin Dashboard"
               >
-                <ShieldCheck size={20} className="text-accent" />
+                <ShieldCheck size={18} className="text-accent" />
               </Button>
             )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/settings')}
+              aria-label="Settings"
+            >
+              <User size={18} />
+            </Button>
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
-              <LogOut size={20} />
+              <LogOut size={18} />
             </Button>
           </div>
         </header>
@@ -123,6 +132,7 @@ function App() {
           <Route path="/capture" element={<Capture />} />
           <Route path="/search" element={<Search />} />
           <Route path="/link-book" element={<LinkBook />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>

@@ -1,24 +1,40 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { SentenceCard } from '../components/SentenceCard';
 import type { SentenceData } from '../components/SentenceCard';
-import { BookOpen } from 'lucide-react';
+import { BookText } from 'lucide-react';
 import { BookDetailModal } from '../components/BookDetailModal';
 import styles from './Home.module.css';
 
 export const Home = () => {
+    const location = useLocation();
     const [sentences, setSentences] = useState<SentenceData[]>([]);
     const [dailySentence, setDailySentence] = useState<SentenceData | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedBookForDetail, setSelectedBookForDetail] = useState<SentenceData | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string>('전체');
     const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     const categories = ['전체', ...Array.from(new Set(sentences.map(s => s.category || '기타')))];
 
+    // Stats
+    const totalCount = sentences.length;
+    const todayCount = sentences.filter(s => new Date(s.created_at).toDateString() === new Date().toDateString()).length;
+
     useEffect(() => {
         fetchSentences();
-    }, []);
+
+        // Handle incoming message from navigation
+        const state = location.state as { message?: string };
+        if (state?.message) {
+            setToastMessage(state.message);
+            setTimeout(() => setToastMessage(null), 3000);
+            // Clear location state
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const fetchSentences = async () => {
         try {
@@ -69,6 +85,15 @@ export const Home = () => {
         }));
     };
 
+    const handleFavoriteUpdate = (id: string, isFavorite: boolean) => {
+        setSentences(prev => prev.map(s => {
+            if (s.id === id) {
+                return { ...s, is_favorite: isFavorite };
+            }
+            return s;
+        }));
+    };
+
     const handleDelete = async (id: string) => {
         if (!confirm('이 문장을 삭제하시겠습니까?')) return;
 
@@ -84,6 +109,8 @@ export const Home = () => {
             if (dailySentence?.id === id) {
                 setDailySentence(null);
             }
+            setToastMessage('문장이 삭제되었습니다.');
+            setTimeout(() => setToastMessage(null), 3000);
         } catch (error: any) {
             console.error('Delete error:', error);
             alert('삭제에 실패했습니다: ' + error.message);
@@ -105,9 +132,22 @@ export const Home = () => {
 
     return (
         <div className={styles.container}>
+            {toastMessage && (
+                <div className={styles.toast}>
+                    {toastMessage}
+                </div>
+            )}
+
             <header className={styles.header}>
-                <h2 className={styles.title}>내 보관함</h2>
-                <p className={styles.subtitle}>{sentences.length}개의 문장이 수집되었습니다.</p>
+                <div className={styles.titleArea}>
+                    <h2 className={styles.title}>문장집</h2>
+                    <div className={styles.statsBadge}>
+                        <span>오늘 <b>{todayCount}</b></span>
+                        <span className={styles.divider}>|</span>
+                        <span>전체 <b>{totalCount}</b></span>
+                    </div>
+                </div>
+                <p className={styles.subtitle}>나만의 소중한 문장들을 모아두는 곳</p>
             </header>
 
             {dailySentence && (
@@ -136,12 +176,25 @@ export const Home = () => {
                 </div>
             </section>
 
-
             {filteredSentences.length === 0 ? (
-                <div className={styles.emptyState}>
-                    <BookOpen size={48} className={styles.emptyIcon} />
-                    <h3>{selectedCategory === '전체' ? '저장된 문장이 없습니다' : '해당 카테고리의 문장이 없습니다'}</h3>
-                    <p>{selectedCategory === '전체' ? '아래 스캔 버튼을 눌러 첫 문장을 수집해보세요.' : '다른 카테고리를 선택해보세요.'}</p>
+                <div className={styles.introContainer}>
+                    <div className={styles.introContent}>
+                        <div className={styles.introIconBox}>
+                            <BookText size={48} />
+                        </div>
+                        <h3>문장집</h3>
+                        <p className={styles.introText}>
+                            책에서 발견한 좋은 문장을 찍고<br />
+                            나만의 문장집에 담아두세요.
+                        </p>
+                        <p className={styles.introSubText}>
+                            나중에 검색으로 언제든<br />
+                            찾아볼 수 있습니다.
+                        </p>
+                        <div className={styles.introGuide}>
+                            <p>✨ 아래 <b>스캔</b> 버튼을 눌러 첫 문장을 수집해보세요.</p>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className={styles.feed}>
@@ -151,6 +204,7 @@ export const Home = () => {
                             sentence={sentence}
                             onDelete={handleDelete}
                             onLike={handleLikeUpdate}
+                            onFavorite={handleFavoriteUpdate}
                             onBookClick={(s) => setSelectedBookForDetail(s)}
                             currentUserId={currentUserId}
                         />

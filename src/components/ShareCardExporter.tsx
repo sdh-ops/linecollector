@@ -61,7 +61,7 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
                 if (!blob) return;
                 const file = new File([blob], 'sentence.png', { type: 'image/png' });
                 if (navigator.share && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file], title: '문장서랍', text: '마음에 드는 문장을 공유합니다.' });
+                    await navigator.share({ files: [file], title: '문장집', text: '마음에 드는 문장을 공유합니다.' });
                 } else {
                     handleDownload();
                 }
@@ -121,7 +121,7 @@ export const ShareCardExporter = ({ sentence, onClose }: ShareCardExporterProps)
                     >
                         <div className={styles.decorator} style={{ background: selectedBg.text, opacity: 0.15 }} />
                         <div className={styles.cardHeader}>
-                            <span className={styles.brand} style={{ color: selectedBg.text, opacity: 0.5 }}>문장서랍</span>
+                            <span className={styles.brand} style={{ color: selectedBg.text, opacity: 0.5 }}>문장집</span>
                         </div>
                         <div className={styles.cardContent}>
                             <p className={styles.sentenceText} style={{ fontSize: `${fontSize}px`, color: selectedBg.text }}>

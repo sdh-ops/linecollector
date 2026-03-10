@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, Image as ImageIcon, ScanText, Barcode } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
 import { OCRProcessor } from '../components/OCRProcessor';
 import { TextSelector } from '../components/TextSelector';
@@ -65,8 +66,27 @@ export const Capture = () => {
         setAppState('SELECTING');
     };
 
-    const handleSaveText = (text: string) => {
-        navigate('/link-book', { state: { selectedText: text } });
+    const handleSaveText = async (text: string) => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('로그인이 필요합니다.');
+
+            const { error } = await supabase
+                .from('sentences')
+                .insert([{
+                    content: text,
+                    user_id: user.id,
+                    is_public: false,
+                    category: '기타'
+                }]);
+
+            if (error) throw error;
+
+            // Show success and move to home
+            navigate('/', { state: { message: '문장 저장됨 ✓' } });
+        } catch (error: any) {
+            alert('저장 실패: ' + error.message);
+        }
     };
 
     if (appState === 'SELECTING') {

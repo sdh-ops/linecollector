@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Share2, Trash2, Heart, EyeOff } from 'lucide-react';
+import { BookOpen, Share2, Trash2, Heart, EyeOff, Star } from 'lucide-react';
 
 import styles from './SentenceCard.module.css';
 import { Button } from './Button';
@@ -20,16 +20,18 @@ export interface SentenceData {
     likes_count: number;
     user_id: string;
     category: string;
+    is_favorite: boolean;
     is_liked?: boolean;
 }
 
 interface SentenceCardProps {
     sentence: SentenceData;
     onDelete?: (id: string) => void;
-    onHide?: (id: string) => void;   // for Explore: hide own sentence from list
+    onHide?: (id: string) => void;
     onLike?: (id: string, isLiked: boolean) => void;
+    onFavorite?: (id: string, isFavorite: boolean) => void;
     onBookClick?: (sentence: SentenceData) => void;
-    currentUserId?: string;          // pass to detect ownership
+    currentUserId?: string;
 }
 
 const HIGHLIGHT_MAP: Record<string, string> = {
@@ -39,9 +41,10 @@ const HIGHLIGHT_MAP: Record<string, string> = {
     pink: 'rgba(251, 207, 232, 0.4)',
 };
 
-export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, currentUserId }: SentenceCardProps) => {
+export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onFavorite, onBookClick, currentUserId }: SentenceCardProps) => {
     const [showShare, setShowShare] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
+    const [isFavoriting, setIsFavoriting] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
     const isOwner = currentUserId && sentence.user_id === currentUserId;
@@ -56,7 +59,8 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, 
         ? { backgroundColor: HIGHLIGHT_MAP[sentence.highlight_color] }
         : {};
 
-    const handleLikeClick = async () => {
+    const handleLikeClick = async (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isLiking) return;
         setIsLiking(true);
         try {
@@ -64,7 +68,6 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, 
             if (!user) return;
 
             if (sentence.is_liked) {
-                // Unlike
                 const { error } = await supabase
                     .from('likes')
                     .delete()
@@ -73,7 +76,6 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, 
                 if (error) throw error;
                 onLike?.(sentence.id, false);
             } else {
-                // Like
                 const { error } = await supabase
                     .from('likes')
                     .insert([{ user_id: user.id, sentence_id: sentence.id }]);
@@ -87,6 +89,26 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, 
         }
     };
 
+    const handleFavoriteClick = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (isFavoriting) return;
+        setIsFavoriting(true);
+        try {
+            const newStatus = !sentence.is_favorite;
+            const { error } = await supabase
+                .from('sentences')
+                .update({ is_favorite: newStatus })
+                .eq('id', sentence.id);
+
+            if (error) throw error;
+            onFavorite?.(sentence.id, newStatus);
+        } catch (error) {
+            console.error('Favorite error:', error);
+        } finally {
+            setIsFavoriting(false);
+        }
+    };
+
     return (
         <article className={`glass-panel ${styles.card}`} onClick={() => showMenu && setShowMenu(false)}>
             <div className={styles.header}>
@@ -95,6 +117,20 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onBookClick, 
                     {sentence.is_public && <span className={styles.publicBadge}>공개</span>}
                 </div>
                 <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                    {/* Favorite */}
+                    {isOwner && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleFavoriteClick}
+                            disabled={isFavoriting}
+                            className={`${styles.favoriteBtn} ${sentence.is_favorite ? styles.favorited : ''}`}
+                            aria-label="Favorite"
+                        >
+                            <Star size={18} fill={sentence.is_favorite ? "#D4A373" : "none"} stroke={sentence.is_favorite ? "#D4A373" : "currentColor"} />
+                        </Button>
+                    )}
+
                     {/* Like */}
                     <div className={styles.likeInfo}>
                         <Button

@@ -39,24 +39,18 @@
     letter-spacing: 0.5px;
 }
 
-.likeInfo {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-}
-
-.likeBtn {
+.favoriteBtn {
     color: var(--text-secondary);
     transition: color 0.2s, transform 0.2s;
 }
 
-.likeBtn:hover {
-    color: #f43f5e !important;
+.favoriteBtn:hover {
+    color: var(--text-accent) !important;
     transform: scale(1.1);
 }
 
-.liked {
-    color: #f43f5e !important;
+.favorited {
+    color: var(--text-accent) !important;
 }
 
 .likeCount {

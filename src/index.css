@@ -111,10 +111,15 @@ button {
 
 .app-header h1 {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   letter-spacing: -0.5px;
   color: var(--text-accent);
+  transition: opacity 0.2s;
+}
+
+.app-header h1:hover {
+  opacity: 0.8;
 }
 
 .app-main {

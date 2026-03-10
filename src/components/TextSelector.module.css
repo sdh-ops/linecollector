@@ -8,10 +8,13 @@
 .instructionBox {
     text-align: center;
     color: var(--text-accent);
-    font-size: 0.875rem;
-    padding: var(--space-2);
-    background-color: rgba(212, 163, 115, 0.1);
-    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: var(--space-4);
+    background-color: rgba(212, 163, 115, 0.08);
+    border-radius: var(--radius-lg);
+    border: 1px dashed rgba(212, 163, 115, 0.3);
+    margin: var(--space-2) 0;
 }
 
 .textBoard {
@@ -19,7 +22,6 @@
     overflow-y: auto;
     padding: var(--space-4);
     user-select: text;
-    /* Crucial for selection */
     -webkit-user-select: text;
 }
 
@@ -29,7 +31,6 @@
     line-height: 2;
     white-space: pre-wrap;
     color: var(--text-primary);
-    /* Highlight styling when text is selected */
 }
 
 .extractedText::selection {
@@ -47,4 +48,49 @@
 
 .saveBtn {
     gap: var(--space-2);
+}
+
+.floatingToolbar {
+    position: fixed;
+    z-index: 1000;
+    background-color: var(--text-accent);
+    color: white;
+    padding: var(--space-1) var(--space-1);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.2s ease-out;
+    transform: translate(-50%, -120%);
+    pointer-events: auto;
+}
+
+.popupSaveBtn {
+    background: none;
+    border: none;
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+}
+
+.popupSaveBtn:active {
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -110%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -120%);
+    }
 }
