@@ -124,10 +124,10 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onFavorite, o
                             size="icon"
                             onClick={handleFavoriteClick}
                             disabled={isFavoriting}
-                            className={`${styles.favoriteBtn} ${sentence.is_favorite ? styles.favorited : ''}`}
+                            className={`${styles.actionBtn} ${sentence.is_favorite ? styles.favorited : ''}`}
                             aria-label="Favorite"
                         >
-                            <Star size={18} fill={sentence.is_favorite ? "#D4A373" : "none"} stroke={sentence.is_favorite ? "#D4A373" : "currentColor"} />
+                            <Star size={18} fill={sentence.is_favorite ? "currentColor" : "none"} />
                         </Button>
                     )}
 
@@ -138,17 +138,17 @@ export const SentenceCard = ({ sentence, onDelete, onHide, onLike, onFavorite, o
                             size="icon"
                             onClick={handleLikeClick}
                             disabled={isLiking}
-                            className={`${styles.likeBtn} ${sentence.is_liked ? styles.liked : ''}`}
+                            className={`${styles.actionBtn} ${sentence.is_liked ? styles.liked : ''}`}
                             aria-label="Like"
                         >
-                            <Heart size={16} fill={sentence.is_liked ? "currentColor" : "none"} />
+                            <Heart size={18} fill={sentence.is_liked ? "currentColor" : "none"} />
                         </Button>
                         {sentence.likes_count > 0 && <span className={styles.likeCount}>{sentence.likes_count}</span>}
                     </div>
 
                     {/* Share */}
-                    <Button variant="ghost" size="icon" onClick={() => setShowShare(true)} aria-label="Share">
-                        <Share2 size={16} />
+                    <Button variant="ghost" size="icon" onClick={() => setShowShare(true)} aria-label="Share" className={styles.actionBtn}>
+                        <Share2 size={18} />
                     </Button>
 
                     {/* Delete (only own sentences) */}

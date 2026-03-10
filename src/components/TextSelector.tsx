@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Save, RefreshCw } from 'lucide-react';
+import { Save, Check, Camera } from 'lucide-react';
 import { Button } from './Button';
 import styles from './TextSelector.module.css';
 
@@ -11,15 +11,27 @@ interface TextSelectorProps {
 
 export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
     const [selectedText, setSelectedText] = useState('');
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [toolbarPos, setToolbarPos] = useState({ top: 0, left: 0, visible: false });
+    const textBoardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleSelectionChange = () => {
             const selection = window.getSelection();
+
             if (selection && selection.toString().trim().length > 0 && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+
                 setSelectedText(selection.toString().trim());
+
+                // Calculate position: Center horizontally, and slightly above the top of the selection
+                setToolbarPos({
+                    top: rect.top - 60, // Position 60px above the top of the selection rect
+                    left: rect.left + rect.width / 2,
+                    visible: true
+                });
             } else {
-                setSelectedText('');
+                setToolbarPos(prev => ({ ...prev, visible: false }));
             }
         };
 
@@ -30,47 +42,53 @@ export const TextSelector = ({ text, onSave, onRetry }: TextSelectorProps) => {
     }, []);
 
     const handleSave = () => {
+        if (!selectedText) return;
+
         onSave(selectedText);
-        // Clear selection after save to allow next one
+
+        // Haptic-like visual feedback: clear selection and hide toolbar
         window.getSelection()?.removeAllRanges();
         setSelectedText('');
+        setToolbarPos(prev => ({ ...prev, visible: false }));
     };
 
     return (
-        <div className={styles.container} ref={containerRef}>
+        <div className={styles.container}>
             <div className={styles.instructionBox}>
-                <p>간직하고 싶은 문장만 드래그하여 저장해두세요. ✨</p>
+                <p>간직하고 싶은 문장을 드래그해보세요. ✨</p>
             </div>
 
-            <div className={`glass-panel ${styles.textBoard}`}>
+            <div className={styles.textBoard} ref={textBoardRef}>
                 <p className={styles.extractedText}>{text}</p>
             </div>
 
-            {selectedText && (
-                <div className={styles.selectionBar}>
-                    <div className={styles.selectionInfo}>
-                        <span className={styles.selectionLabel}>선택된 문장</span>
-                        <p className={styles.selectionPreview}>{selectedText}</p>
-                    </div>
-                    <button className={styles.saveButton} onClick={handleSave}>
+            {toolbarPos.visible && selectedText && (
+                <div
+                    className={styles.floatingToolbar}
+                    style={{
+                        top: `${toolbarPos.top}px`,
+                        left: `${toolbarPos.left}px`,
+                        transform: 'translateX(-50%)'
+                    }}
+                >
+                    <button className={styles.toolbarBtn} onClick={handleSave}>
                         <Save size={18} />
-                        저장하기
+                        간직하기
                     </button>
                 </div>
             )}
 
             <div className={styles.actionContainer}>
-                {!selectedText && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
-                        <Button fullWidth onClick={onRetry}>
-                            <RefreshCw size={18} />
-                            수집 완료하기 (홈으로)
-                        </Button>
-                        <Button fullWidth variant="ghost" onClick={onRetry}>
-                            다른 사진 찍기
-                        </Button>
-                    </div>
-                )}
+                <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+                    <Button fullWidth onClick={onRetry} className="btn-premium">
+                        <Check size={18} />
+                        수집 완료
+                    </Button>
+                    <Button fullWidth variant="ghost" onClick={onRetry}>
+                        <Camera size={18} />
+                        다시 찍기
+                    </Button>
+                </div>
             </div>
         </div>
     );
