@@ -31,9 +31,13 @@ export const Search = () => {
         setHasSearched(true);
 
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
             const { data, error } = await supabase
                 .from('sentences')
                 .select('*')
+                .eq('user_id', user.id)
                 .or(`content.ilike.%${query}%,book_title.ilike.%${query}%,book_author.ilike.%${query}%`)
                 .order('created_at', { ascending: false });
 
