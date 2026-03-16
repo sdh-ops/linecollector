@@ -39,12 +39,13 @@ export const Home = () => {
     const fetchSentences = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            setCurrentUserId(user?.id);
+            if (!user) return;
+            setCurrentUserId(user.id);
 
             const { data, error } = await supabase
                 .from('sentences')
                 .select('*, likes(user_id)')
-                .eq('user_id', user?.id)
+                .eq('user_id', user.id)
                 .order('created_at', { ascending: false });
 
             if (error) {
